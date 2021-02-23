@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="13" tileheight="13" infinite="0" nextlayerid="3" nextobjectid="1">
+ <editorsettings>
+  <export target="map1.json" format="json"/>
+ </editorsettings>
+ <properties>
+  <property name="bool" type="bool" value="true"/>
+  <property name="color_prop" type="color" value="#ff28ae7b"/>
+  <property name="multiline_prop">Multiline property
+Second line</property>
+  <property name="some_float" type="float" value="1.5e-08"/>
+  <property name="some_property" type="int" value="1"/>
+  <property name="string_prop" value="Single line prop"/>
+ </properties>
+ <tileset firstgid="1" name="tileset" tilewidth="13" tileheight="13" tilecount="100" columns="10">
+  <properties>
+   <property name="tileset_property" type="int" value="543"/>
+  </properties>
+  <image source="../sprites/tileset.png" width="130" height="130"/>
+  <terraintypes>
+   <terrain name="Forest" tile="11"/>
+   <terrain name="Water" tile="0"/>
+  </terraintypes>
+  <tile id="0" terrain=",,,0">
+   <properties>
+    <property name="tileset_custom" type="int" value="123"/>
+   </properties>
+  </tile>
+  <tile id="1" terrain=",,0,0"/>
+  <tile id="2" terrain=",,0,"/>
+  <tile id="4" terrain="0,0,0,"/>
+  <tile id="5" terrain="0,0,,"/>
+  <tile id="6" terrain="0,0,,0"/>
+  <tile id="10" terrain=",0,,0"/>
+  <tile id="11" terrain="0,0,0,0">
+   <objectgroup draworder="index" id="3">
+    <object id="2" type="collision" x="0" y="0" width="13" height="13"/>
+   </objectgroup>
+  </tile>
+  <tile id="12" terrain="0,,0,"/>
+  <tile id="14" terrain="0,,0,"/>
+  <tile id="16" terrain=",0,,0"/>
+  <tile id="20" terrain=",0,,"/>
+  <tile id="21" terrain="0,0,,"/>
+  <tile id="22" terrain="0,,,"/>
+  <tile id="24" terrain="0,,0,0"/>
+  <tile id="25" terrain=",,0,0"/>
+  <tile id="26" terrain=",0,0,0"/>
+  <tile id="62">
+   <animation>
+    <frame tileid="62" duration="200"/>
+    <frame tileid="63" duration="200"/>
+    <frame tileid="64" duration="200"/>
+    <frame tileid="65" duration="200"/>
+    <frame tileid="66" duration="200"/>
+    <frame tileid="67" duration="200"/>
+    <frame tileid="66" duration="200"/>
+    <frame tileid="65" duration="200"/>
+    <frame tileid="64" duration="200"/>
+    <frame tileid="63" duration="200"/>
+    <frame tileid="62" duration="200"/>
+    <frame tileid="62" duration="200"/>
+   </animation>
+  </tile>
+  <tile id="70" terrain=",,,1"/>
+  <tile id="71" terrain=",,1,1"/>
+  <tile id="72" terrain=",,1,"/>
+  <tile id="74" terrain="1,1,1,"/>
+  <tile id="75" terrain="1,1,,"/>
+  <tile id="76" terrain="1,1,,1"/>
+  <tile id="80" terrain=",1,,1"/>
+  <tile id="81" terrain="1,1,1,1"/>
+  <tile id="82" terrain="1,,1,"/>
+  <tile id="84" terrain="1,,1,"/>
+  <tile id="85" terrain="1,1,1,1"/>
+  <tile id="86" terrain=",1,,1"/>
+  <tile id="90" terrain=",1,,"/>
+  <tile id="91" terrain="1,1,,"/>
+  <tile id="92" terrain="1,,,"/>
+  <tile id="94" terrain="1,,1,1"/>
+  <tile id="95" terrain=",,1,1"/>
+  <tile id="96" terrain=",1,1,1"/>
+ </tileset>
+ <layer id="1" name="ground" width="10" height="10">
+  <data encoding="csv">
+24,4,14,4,14,4,14,4,24,14,
+4,1,2,26,2,3,14,14,14,44,
+4,11,12,12,12,25,3,34,34,44,
+44,21,7,12,12,12,15,14,44,14,
+14,24,21,7,12,12,13,24,4,4,
+44,24,24,21,6,22,23,4,4,24,
+96,73,34,4,44,44,44,4,4,14,
+82,95,96,72,73,24,34,34,24,24,
+86,86,86,82,95,72,73,71,73,4,
+86,86,86,86,82,82,85,91,93,0
+</data>
+ </layer>
+</map>
