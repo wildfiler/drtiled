@@ -42,9 +42,10 @@ module Tiled
         height = map.attributes.tileheight.to_i
         map_height = map.attributes.height.to_i - 1
         tiles.flat_map.with_index do |row, y|
-          row.compact.map.with_index do |tile, x|
+          row.map.with_index do |tile, x|
+            next unless tile
             sprite_class.from_tiled(x * width, (map_height - y) * height, tile)
-          end
+          end.compact
         end
       end
     end

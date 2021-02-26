@@ -3,15 +3,17 @@ module Tiled
     include Tiled::Serializable
 
     def initialize(hash)
-      @attributes = hash
       hash.each do |key, value|
         instance_variable_set(:"@#{key}", value)
         define_singleton_method(key) { instance_variable_get(:"@#{key}") }
       end
     end
 
-    def serialize
-      @attributes.dup
+    def add(hash)
+      hash.each do |key, value|
+        instance_variable_set(:"@#{key}", value)
+        define_singleton_method(key) { instance_variable_get(:"@#{key}") } unless respond_to? key
+      end
     end
   end
 end

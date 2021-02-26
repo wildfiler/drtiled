@@ -47,14 +47,14 @@ module Tiled
       @tiles_cache ||= {}
       @tiles_cache[gid] ||= begin
         tileset = tilesets.detect do |tileset|
-          tileset.firstgid <= gid && tileset.firstgid + tileset.attributes.tilecount.to_i >= gid
+          tileset.firstgid <= gid && tileset.firstgid + tileset.attributes.tilecount.to_i - 1 >= gid
         end
-        tileset.find(gid)
+        tileset.find(gid) if tileset
       end
     end
 
     def exclude_from_serialize
-      super + %w[tiles_cache]
+      super + %w[tiles_cache tilesets layers]
     end
   end
 end

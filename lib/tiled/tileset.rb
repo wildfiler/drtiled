@@ -1,7 +1,7 @@
 module Tiled
   class Tileset
     include Tiled::Serializable
-    attr_reader :map, :attributes, :image, :tiles_cache, :hash
+    attr_reader :map, :attributes, :image, :tiles_cache, :hash, :external_hash
 
     def initialize(map)
       @map = map
@@ -11,6 +11,12 @@ module Tiled
     def from_xml_hash(hash)
       @hash = hash
       @attributes = Attributes.new(hash[:attributes])
+
+      if attributes.respond_to?(:source)
+        path = Utils.relative_to_absolute(File.join(File.dirname(map.path), attributes.source))
+        hash = $gtk.parse_xml_file(path)[:children].first
+        attributes.add(hash[:attributes])
+      end
 
       @tiles = Array.new(tilecount)
 
@@ -72,7 +78,7 @@ module Tiled
     end
 
     def exclude_from_serialize
-      super + %w[tiles_cache]
+      super + %w[tiles_cache hash external_hash tiles]
     end
   end
 end
