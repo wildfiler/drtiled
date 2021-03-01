@@ -1,0 +1,5 @@
+--readme README.md
+--title 'DRTiled Documentation'
+--charset utf-8
+--exclude app/
+lib/**/*.rb
