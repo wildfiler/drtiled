@@ -24,7 +24,7 @@ module Tiled
         when 'layer'
           layer = Layer.new(self)
           layer.from_xml_hash(child)
-          layers << layer
+          layers.add layer
         when 'properties'
           properties.from_xml_hash(child[:children])
         when 'tileset'
@@ -36,7 +36,7 @@ module Tiled
     end
 
     def layers
-      @layers ||= []
+      @layers ||= Layers.new
     end
 
     def tilesets
