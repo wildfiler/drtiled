@@ -6,6 +6,9 @@ This is a library for loading Tiled map files in [Dragon Ruby GTK](https://drago
 
 It supports TMX format directly allowing skip exporting to json or csv files step.
 
+## Demo
+
+https://youtu.be/RrWJ3s3WA3s
 
 ## Installation
 
