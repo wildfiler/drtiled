@@ -15,7 +15,7 @@ module Tiled
     def from_xml_hash(hash)
       attributes.add(hash[:attributes])
 
-      if source.present?
+      if source && !source.empty?
         path = Utils.relative_to_absolute(File.join(File.dirname(map.path), source))
         hash = $gtk.parse_xml_file(path)[:children].first
         attributes.add(hash[:attributes])
