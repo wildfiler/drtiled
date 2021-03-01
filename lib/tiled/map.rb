@@ -2,7 +2,13 @@ module Tiled
 
   class Map
     include Tiled::Serializable
-    attr_reader :map, :attributes, :path, :sprite_class
+    include Tiled::WithAttributes
+
+    attr_reader :map, :path, :sprite_class
+    attributes :id, :tiledversion, :orientation, :renderorder, :compressionlevel, :width, :height,
+      :tilewidth, :tileheight, :hexsidelength, :staggeraxis, :staggerindex, :backgroundcolor, :nextlayerid,
+      :nextobjectid, :infinite
+
 
     def initialize(path, sprite_class = Sprite)
       @path = path
@@ -12,7 +18,7 @@ module Tiled
     def load
       xml = $gtk.parse_xml_file(@path)
       @map = xml[:children].first
-      @attributes = Attributes.new(@map[:attributes])
+      attributes.add(@map[:attributes])
       map[:children].each do |child|
         case child[:name]
         when 'layer'

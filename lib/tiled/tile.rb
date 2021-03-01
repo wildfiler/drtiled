@@ -1,7 +1,10 @@
 module Tiled
   class Tile
     include Tiled::Serializable
-    attr_reader :tileset, :attributes, :path, :tile_w, :tile_h, :tile_x, :tile_y, :id
+    include Tiled::WithAttributes
+
+    attr_reader :tileset, :path, :tile_w, :tile_h, :tile_x, :tile_y
+    attributes :id, :type, :terrain, :probability
 
     def initialize(tileset)
       @tileset = tileset
@@ -9,10 +12,9 @@ module Tiled
 
     # TODO: Add terrain and animation support
     def from_xml_hash(hash)
-      @attributes = Attributes.new(hash[:attributes])
+      attributes.add(hash[:attributes])
       @path = tileset.image.path
-      @id = attributes.id.to_i
-      @tile_x, @tile_y, @tile_w, @tile_h = tileset.id_to_xywh(id)
+      @tile_x, @tile_y, @tile_w, @tile_h = tileset.id_to_xywh(id.to_i)
       hash[:children].each do |child|
         case child[:name]
         when 'properties'
@@ -22,12 +24,16 @@ module Tiled
     end
 
     def init_empty(id)
-      @attributes = Attributes.new({
+      attributes.add({
         id: id,
       })
       @path = tileset.image.path
-      @id = id
       @tile_x, @tile_y, @tile_w, @tile_h = tileset.id_to_xywh(id)
+    end
+
+    # Object has id method and method_missing magic from WithAttribute for attributes like id doesnt work.
+    def id
+      attributes.id.to_i
     end
 
     def properties

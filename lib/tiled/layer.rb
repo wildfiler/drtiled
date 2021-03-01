@@ -1,16 +1,17 @@
 module Tiled
   class Layer
     include Tiled::Serializable
+    include Tiled::WithAttributes
 
-    attr_reader :attributes, :map, :hash, :tiles, :data
+    attr_reader :map, :tiles, :data
+    attributes :id, :name, :x, :y, :width, :height, :opacity, :visible, :tintcolor, :offsetx, :offsety
 
     def initialize(map)
       @map = map
     end
 
     def from_xml_hash(hash)
-      @hash = hash
-      @attributes = Attributes.new(hash[:attributes])
+      attributes.add(hash[:attributes])
 
       hash[:children].each do |child|
         case child[:name]
@@ -21,10 +22,6 @@ module Tiled
           @data.from_xml_hash(child)
         end
       end
-    end
-
-    def name
-      attributes.name
     end
 
     def tiles

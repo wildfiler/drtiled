@@ -1,8 +1,10 @@
 module Tiled
   class LayerData
     include Tiled::Serializable
+    include Tiled::WithAttributes
 
-    attr_reader :attributes, :layer, :tiles
+    attr_reader :layer, :tiles
+    attributes :encoding, :compression
 
     def initialize(layer)
       @layer = layer
@@ -10,11 +12,11 @@ module Tiled
 
     # TODO: Add tile and chunk support
     def from_xml_hash(hash)
-      @attributes = Attributes.new(hash[:attributes])
-      unsupported_encoding if attributes.encoding != 'csv'
+      attributes.add(hash[:attributes])
+      unsupported_encoding if encoding != 'csv'
       hash[:children].each do |child|
         if child[:type] == :content
-          @tiles = case attributes.encoding
+          @tiles = case encoding
           when 'csv'
             parse_csv(child[:data])
           end
@@ -35,7 +37,7 @@ module Tiled
     end
 
     def unsupported_encoding
-      raise UnsupportedEncoding, "Layer #{layer.name} has unsupported encoding: #{attributes.encoding}"
+      raise UnsupportedEncoding, "Layer #{layer.name} has unsupported encoding: #{encoding}"
     end
   end
 end

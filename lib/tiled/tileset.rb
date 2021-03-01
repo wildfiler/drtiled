@@ -1,7 +1,11 @@
 module Tiled
   class Tileset
     include Tiled::Serializable
-    attr_reader :map, :attributes, :image, :tiles_cache, :hash, :external_hash
+    include Tiled::WithAttributes
+
+    attr_reader :map, :image, :tiles_cache
+    attributes :firstgid, :source, :name, :tilewidth, :tileheight, :spacing, :margin, :tilecount,
+      :columns, :objectalignment
 
     def initialize(map)
       @map = map
@@ -9,11 +13,10 @@ module Tiled
 
     # TODO: Add terraintypes, grid, tileoffset, wangsets
     def from_xml_hash(hash)
-      @hash = hash
-      @attributes = Attributes.new(hash[:attributes])
+      attributes.add(hash[:attributes])
 
-      if attributes.respond_to?(:source)
-        path = Utils.relative_to_absolute(File.join(File.dirname(map.path), attributes.source))
+      if source.present?
+        path = Utils.relative_to_absolute(File.join(File.dirname(map.path), source))
         hash = $gtk.parse_xml_file(path)[:children].first
         attributes.add(hash[:attributes])
       end
@@ -28,9 +31,17 @@ module Tiled
           @image = Image.new(self)
           image.from_xml_hash(child)
         when 'tile'
+          begin
           tile = Tile.new(self)
           tile.from_xml_hash(child)
           tiles[tile.id] = tile
+          rescue StandardError => e
+            puts self
+            puts tile
+            puts "id: #{tile.id}"
+            puts "attributes.id: #{tile.attributes.id}"
+            raise e
+          end
         end
       end
 
@@ -78,7 +89,7 @@ module Tiled
     end
 
     def exclude_from_serialize
-      super + %w[tiles_cache hash external_hash tiles]
+      super + %w[tiles_cache tiles]
     end
   end
 end

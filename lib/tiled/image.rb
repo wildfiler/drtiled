@@ -1,15 +1,18 @@
 module Tiled
   class Image
     include Tiled::Serializable
+    include Tiled::WithAttributes
 
-    attr_reader :tileset, :attributes, :path, :w, :h
+    attr_reader :tileset, :path, :w, :h
+
+    attributes :source, :trans, :width, :height
 
     def initialize(tileset)
       @tileset = tileset
     end
 
     def from_xml_hash(hash)
-      @attributes = Attributes.new(hash[:attributes])
+      attributes.add(hash[:attributes])
       @path = Utils.relative_to_absolute(File.join(File.dirname(map.path), attributes.source))
       @h = attributes.height
       @w = attributes.width

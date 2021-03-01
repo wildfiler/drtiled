@@ -1,3 +1,5 @@
+require 'lib/tiled/with_attributes.rb'
+
 require 'lib/tiled/attribute_assignment.rb'
 require 'lib/tiled/attributes.rb'
 require 'lib/tiled/color.rb'
@@ -19,6 +21,7 @@ module Tiled
   module AttributeAssignment; end
   module Serializable;end
   module Utils; end
+  module WithAttributes; end
 
   class Attributes; end
   class Color; end

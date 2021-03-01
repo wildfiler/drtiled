@@ -5,14 +5,25 @@ module Tiled
     def initialize(hash)
       hash.each do |key, value|
         instance_variable_set(:"@#{key}", value)
-        define_singleton_method(key) { instance_variable_get(:"@#{key}") }
+
+        instance_eval(<<-CODE)
+          undef :#{key} if respond_to? :#{key}
+          def #{key}
+            @#{key}
+          end
+        CODE
       end
     end
 
     def add(hash)
       hash.each do |key, value|
         instance_variable_set(:"@#{key}", value)
-        define_singleton_method(key) { instance_variable_get(:"@#{key}") } unless respond_to? key
+        instance_eval(<<-CODE)
+          undef :#{key} if respond_to? :#{key}
+          def #{key}
+            @#{key}
+          end
+        CODE
       end
     end
   end
