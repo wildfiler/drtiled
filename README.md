@@ -34,6 +34,27 @@ end
 The tilesets and spritesheets used in map should be placed inside your game dir, for example you should save map files inside map dir and spritesheets inside sprites dir.
 
 
+### Accessing layers
+
+```ruby
+ground_layer = map.layers['ground'] # Get layer by name
+collisions_layer = map.layers['collisions']
+layer_5 = map.layers.at(5) # Get layer by index
+
+map.layers.select(&:visible?) # Get visible layers
+```
+
+### Working with tiles
+
+You can access individual tiles using `#tile_at(x, y)` method.
+
+```ruby
+collisions_layer = map.layers['collisions']
+if collisions_layer.tile_at(new_x, new_y).properties.passable?
+  player.move(new_x, new_y)
+end
+```
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
