@@ -1,5 +1,8 @@
 module Tiled
   class Sprite
+    # Sprite class for easy rendering of maps. You can pass instance of this class to `args.outputs` array.
+    # Used in Tiled::Layer#sprites.
+
     include Tiled::Serializable
     include Tiled::AttributeAssignment
 
@@ -9,6 +12,12 @@ module Tiled
       update(attributes)
     end
 
+    # :nodoc:
+    def primitive_marker
+      :sprite
+    end
+
+    # @return [Tiled::Sprite] return sprite object from `Tiled::Tile` object.
     def self.from_tiled(x, y, tile)
       new(
         path: tile.path,
