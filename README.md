@@ -2,7 +2,7 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/wildfiler/drtiled?label=version&style=plastic)
 
-This is a library for loading Tiled map files in [Dragon Ruby GTK](https://dragonruby.org/toolkit/game).
+This is a library for loading Tiled map files in [DragonRuby Game Toolkit](https://dragonruby.org/toolkit/game).
 
 It supports TMX format directly allowing skip exporting to json or csv files step.
 
