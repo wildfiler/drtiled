@@ -34,6 +34,8 @@ module Tiled
 
     def sprites
       @sprites ||= begin
+        return unless visible?
+
         sprite_class = map.sprite_class
         width = map.attributes.tilewidth.to_i
         height = map.attributes.tileheight.to_i
@@ -49,6 +51,10 @@ module Tiled
 
     def properties
       @properties ||= Properties.new(self)
+    end
+
+    def visible?
+      visible != '0'
     end
 
     def exclude_from_serialize
