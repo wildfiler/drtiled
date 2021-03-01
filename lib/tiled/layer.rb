@@ -3,7 +3,7 @@ module Tiled
     include Tiled::Serializable
     include Tiled::WithAttributes
 
-    attr_reader :map, :tiles, :data
+    attr_reader :map, :data
     attributes :id, :name, :x, :y, :width, :height, :opacity, :visible, :tintcolor, :offsetx, :offsety
 
     def initialize(map)
