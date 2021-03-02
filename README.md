@@ -6,9 +6,11 @@ This is a library for loading Tiled map files in [DragonRuby Game Toolkit](https
 
 It supports TMX format directly allowing skip exporting to json or csv files step.
 
+
 ## Demo
 
-https://youtu.be/RrWJ3s3WA3s
+[![Map updating with DRTiled lib](https://img.youtube.com/vi/RrWJ3s3WA3s/0.jpg)](https://youtu.be/RrWJ3s3WA3s)
+
 
 ## Installation
 
