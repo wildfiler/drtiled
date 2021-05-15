@@ -13,8 +13,22 @@ module Tiled
     # TODO: Add terrain and animation support
     def from_xml_hash(hash)
       attributes.add(hash[:attributes])
-      @path = tileset.image.path
-      @tile_x, @tile_y, @tile_w, @tile_h = tileset.id_to_xywh(id.to_i)
+      if tileset.image
+        @path = tileset.image.path
+        @tile_x, @tile_y, @tile_w, @tile_h = tileset.id_to_xywh(id.to_i)
+      else
+        # Tileset doesn't have an image but is made of individual images; we can process those directly
+        image_attributes = hash[:children].select do |item|
+          item[:name] == "image"
+        end.first
+        img = Tiled::Image.new(tileset)
+        img.from_xml_hash(image_attributes)
+        @path = img.path
+        @tile_x = 0
+        @tile_y = 0
+        @tile_w = img.width
+        @tile_h = img.height
+      end
       hash[:children].each do |child|
         case child[:name]
         when 'properties'
@@ -27,7 +41,7 @@ module Tiled
       attributes.add({
         id: id,
       })
-      @path = tileset.image.path
+      @path = tileset.image.path unless tileset.image.nil?
       @tile_x, @tile_y, @tile_w, @tile_h = tileset.id_to_xywh(id)
     end
 
