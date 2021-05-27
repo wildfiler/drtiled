@@ -74,7 +74,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## Credits
 
-- Thanks to [Pipoya](pipoya.itch.io) for beautiful arts and sample map used in samples!
+- Thanks to [Pipoya](https://pipoya.itch.io) for beautiful arts and sample map used in samples!  
 - [Kenney Simplified Platformer Pack](https://www.kenney.nl/assets/simplified-platformer-pack) used for loose tiles map sample
 
 ## License
