@@ -3,7 +3,7 @@ module Tiled
     include Tiled::Serializable
     include Tiled::WithAttributes
 
-    attr_reader :map, :image, :tiles_cache
+    attr_reader :map, :path, :image, :tiles_cache
     attributes :firstgid, :source, :name, :tilewidth, :tileheight, :spacing, :margin, :tilecount,
       :columns, :objectalignment
 
@@ -16,7 +16,7 @@ module Tiled
       attributes.add(hash[:attributes])
 
       if source && !source.empty?
-        path = Utils.relative_to_absolute(File.join(File.dirname(map.path), source))
+        @path = Utils.relative_to_absolute(File.join(File.dirname(map.path), source))
         hash = $gtk.parse_xml_file(path)[:children].first
         attributes.add(hash[:attributes])
       end

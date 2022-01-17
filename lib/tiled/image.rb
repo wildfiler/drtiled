@@ -13,7 +13,7 @@ module Tiled
 
     def from_xml_hash(hash)
       attributes.add(hash[:attributes])
-      @path = Utils.relative_to_absolute(File.join(File.dirname(map.path), attributes.source))
+      @path = Utils.relative_to_absolute(File.join(File.dirname(tileset.path || map.path), attributes.source))
       @h = attributes.height
       @w = attributes.width
     end
