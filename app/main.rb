@@ -3,6 +3,7 @@ require 'lib/tiled/tiled.rb'
 MAPS = [
   "maps/pipo_map/samplemap.tmx",
   "maps/loose_tiles/samplemap.tmx",
+  "maps/chunks/samplemap.tmx",
 ]
 
 def tick(args)
