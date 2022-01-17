@@ -78,7 +78,12 @@ module Tiled
     end
 
     def id_to_xywh(id)
-      y, x = id.divmod(columns)
+      if columns.zero?
+        y = 0
+        x = 0
+      else
+        y, x = id.divmod(columns)
+      end
 
       [
         x * tilewidth + spacing + 2 * margin,
