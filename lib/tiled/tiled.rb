@@ -39,4 +39,5 @@ module Tiled
   class UnknownAttribute < NoMethodError; end
   class Error < StandardError; end
   class UnsupportedEncoding < Error; end
+  class UnsupportedRenderOrder < Error; end
 end

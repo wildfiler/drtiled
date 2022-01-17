@@ -3,6 +3,9 @@ module Tiled
     include Tiled::Serializable
     include Tiled::WithAttributes
 
+    RIGHT_DOWN = 'right-down'.freeze
+    RIGHT_UP = 'right-up'.freeze
+
     attr_reader :map, :data
     attributes :id, :name, :x, :y, :width, :height, :opacity, :visible, :tintcolor, :offsetx, :offsety
 
@@ -62,12 +65,21 @@ module Tiled
       sprite_class = map.sprite_class
       width = map.attributes.tilewidth.to_i
       height = map.attributes.tileheight.to_i
-      map_height = map.attributes.height.to_i - 1
+      map_height = map.attributes.height.to_i
 
-      @sprites = tiles.flat_map.with_index do |row, y|
+      @sprites = tile_rows.flat_map.with_index do |row, y|
         row.map.with_index do |tile, x|
           next unless tile
-          sprite_class.from_tiled(x * width, (map_height - y) * height, tile)
+
+          case render_order
+          when RIGHT_DOWN
+            sprite_y = (map_height - (y + 1)) * height
+          when RIGHT_UP
+            sprite_y = y * height
+          else
+            raise_unsupported_render_order!
+          end
+          sprite_class.from_tiled(x * width, sprite_y, tile)
         end.compact
       end
     end
@@ -84,6 +96,29 @@ module Tiled
 
     def exclude_from_serialize
       super + %w[tiles sprites]
+    end
+
+    private
+
+    # Tiled always defaults to "right-down" renderorder
+    # when not provided and for non-orthogonal maps
+    def render_order
+      map.renderorder || RIGHT_DOWN
+    end
+
+    def tile_rows
+      case render_order
+      when RIGHT_DOWN
+        tiles
+      when RIGHT_UP
+        tiles.reverse
+      else
+        raise_unsupported_render_order!
+      end
+    end
+
+    def raise_unsupported_render_order!
+      raise UnsupportedRenderOrder, "Map for Layer #{name} has unsupported renderorder: #{render_order}"
     end
   end
 end
