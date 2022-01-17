@@ -8,20 +8,14 @@ module Tiled
 
     def initialize(layer)
       @layer = layer
+      @tiles = []
     end
 
-    # TODO: Add tile and chunk support
+    # TODO: Add tile support
     def from_xml_hash(hash)
       attributes.add(hash[:attributes])
-      unsupported_encoding if encoding != 'csv'
-      hash[:children].each do |child|
-        if child[:type] == :content
-          @tiles = case encoding
-          when 'csv'
-            parse_csv(child[:data])
-          end
-        end
-      end
+
+      process_node(hash, 0, 0)
     end
 
     def exclude_from_serialize
@@ -30,13 +24,40 @@ module Tiled
 
     private
 
-    def parse_csv(csv)
-      csv.lines.map do |line|
-        line.strip.split(',').map(&:to_i)
+    def process_node(node, chunk_x, chunk_y)
+      if node[:type] == :element
+        if node[:name] == 'chunk'
+          chunk_x = node[:attributes]['x'].to_i
+          chunk_y = node[:attributes]['y'].to_i
+        end
+        node[:children].each do |child_node|
+          process_node(
+            child_node,
+            chunk_x,
+            chunk_y,
+          )
+        end
+      elsif node[:type] == :content
+        parse_chunk(node[:data]).each_with_index do |row_data, row_y|
+          row_y += chunk_y
+          tiles[row_y] ||= []
+          tiles[row_y].insert(chunk_x, *row_data)
+        end
       end
     end
 
-    def unsupported_encoding
+    def parse_chunk(data)
+      case encoding
+      when 'csv'
+        data.lines.map do |line|
+          line.strip.split(',').map(&:to_i)
+        end
+      else
+        raise_unsupported_encoding!
+      end
+    end
+
+    def raise_unsupported_encoding!
       raise UnsupportedEncoding, "Layer #{layer.name} has unsupported encoding: #{encoding}"
     end
   end
