@@ -54,6 +54,10 @@ module Tiled
       []
     end
 
+    def animated_sprites
+      []
+    end
+
     # Renders the objects to the `outputs_layer`.
     # @param args [GTK::Args] `args` from `tick` method
     # @param target [Symbol] the output target, either :primitives or :debug

@@ -3,7 +3,7 @@ module Tiled
     include Tiled::Serializable
     include Tiled::WithAttributes
 
-    attr_reader :tileset, :path, :tile_w, :tile_h, :tile_x, :tile_y
+    attr_reader :tileset, :path, :tile_w, :tile_h, :tile_x, :tile_y, :animation
     attributes :id, :type, :terrain, :probability
 
     def initialize(tileset)
@@ -16,6 +16,9 @@ module Tiled
 
       hash[:children].each do |child|
         case child[:name]
+        when 'animation'
+          @animation = Animation.new(tileset)
+          @animation.from_xml_hash(child)
         when 'properties'
           properties.from_xml_hash(child[:children])
         when 'image'
@@ -47,6 +50,11 @@ module Tiled
 
     def properties
       @properties ||= Properties.new(self)
+    end
+
+    #
+    def animated?
+      !animation.nil?
     end
 
     private

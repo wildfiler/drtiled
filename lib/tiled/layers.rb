@@ -39,5 +39,9 @@ module Tiled
     def each(&block)
       @layers.each(&block)
     end
+
+    def empty?
+      @layers.empty?
+    end
   end
 end
