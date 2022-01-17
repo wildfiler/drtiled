@@ -34,41 +34,35 @@ def tick(args)
 
   if map = args.state.loaded_maps[MAPS[args.state.current_map_index]]
     unless args.state.map_rendered
-      target = args.render_target(:map)
-      attributes = map.attributes
-      target.width = attributes.width.to_i * attributes.tilewidth.to_i
-      target.height = attributes.height.to_i * attributes.tileheight.to_i
-      target.sprites << map.layers.map(&:sprites)
+      map.layers.each do |layer|
+        target = render_target_for(args, map, :"map_layer_#{layer.id}")
 
-      if args.state.show_objects && map.layers['objects_test']
-        map.layers['objects_test'].render_debug(args, target.debug)
+        if layer.is_a?(Tiled::ObjectLayer)
+          layer.render(args, target.primitives)
+        else
+          target.sprites << layer.sprites
+        end
       end
 
       args.state.map_rendered = true
     end
 
-    args.outputs.primitives << {
-      x: 25,
-      y: 720 - 25,
-      text: "Currently viewing map: #{MAPS[args.state.current_map_index]}",
-      size_enum: 4
-    }.label
+    map.layers.each do |layer|
+      next if layer.animated_sprites.empty?
 
-    args.outputs.primitives << {
-      x: 25,
-      y: 720 - 50,
-      text: "(press left/right arrow key to swap)"
-    }.label
-
-    if map.layers['objects_test']
-      args.outputs.primitives << {
-        x: 25,
-        y: 720 - 75,
-        text: "(press 'o' to show objects layer)"
-      }.label
+      target = render_target_for(args, map, :"map_layer_#{layer.id}_animated")
+      target.sprites << layer.animated_sprites
     end
 
-    args.outputs.sprites << [(1280 - 720)/2, 0, 720, 720, :map]
+    args.outputs.sprites << map.layers.map do |layer|
+      next if layer.is_a?(Tiled::ObjectLayer) && !args.state.show_objects
+
+      render_targets = [{ x: 280, y: 0, w: 720, h: 720, path: :"map_layer_#{layer.id}"}]
+      render_targets << { x: 280, y: 0, w: 720, h: 720, path: :"map_layer_#{layer.id}_animated"} unless layer.animated_sprites.empty?
+      render_targets
+    end
+
+    show_prompts(args, map)
   end
 
   if args.inputs.keyboard.key_down.right
@@ -76,19 +70,54 @@ def tick(args)
     args.state.current_map_index = 0 if args.state.current_map_index > MAPS.length - 1
     args.state.map_rendered = false
   end
+
   if args.inputs.keyboard.key_down.left
     args.state.current_map_index -= 1
     args.state.current_map_index = MAPS.length - 1 if args.state.current_map_index < 0
     args.state.map_rendered = false
   end
+
   if args.inputs.keyboard.key_down.o
     args.state.show_objects = !args.state.show_objects
     args.state.map_rendered = false
   end
 
   args.outputs.labels << {
-    x: args.grid.left.shift_right(10),
-    y: args.grid.bottom.shift_up(25),
+    x: 10.from_left,
+    y: 25.from_bottom,
     text: "#{args.gtk.current_framerate.to_i} fps"
   }.label
+end
+
+def render_target_for(args, map, path)
+  attributes = map.attributes
+  target = args.render_target(path)
+  target.clear_before_render = true
+  target.width = attributes.width * attributes.tilewidth
+  target.height = attributes.height * attributes.tileheight
+
+  target
+end
+
+def show_prompts(args, map)
+  args.outputs.debug << {
+    x: 25,
+    y: 0.from_top,
+    text: "Currently viewing map: #{MAPS[args.state.current_map_index]}",
+    size_enum: 4
+  }.label
+
+  args.outputs.debug << {
+    x: 25,
+    y: 25.from_top,
+    text: "(press left/right arrow key to swap)"
+  }.label
+
+  unless map.object_groups.empty?
+    args.outputs.debug << {
+      x: 25,
+      y: 720 - 75,
+      text: "(press 'o' to show objects layer)"
+    }.label
+  end
 end

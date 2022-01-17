@@ -66,27 +66,39 @@ module Tiled
     # @return [Array<Tiled::Sprite>] array of sprite objects.
     # @return [Map#sprite_class] array of objects of custom class.
     def sprites
-      return unless visible?
+      return [] unless visible?
       return @sprites if @sprites
 
       sprite_class = map.sprite_class
       width = map.attributes.tilewidth
       height = map.attributes.tileheight
-      map_height = map.attributes.height
+
 
       @sprites = tile_rows.flat_map.with_index do |row, y|
         row.map.with_index do |tile, x|
           next unless tile
+          next if tile.animated?
 
-          case render_order
-          when RIGHT_DOWN
-            sprite_y = (map_height - (y + 1)) * height
-          when RIGHT_UP
-            sprite_y = y * height
-          else
-            raise_unsupported_render_order!
-          end
-          sprite_class.from_tiled(tile, x: x * width, y: sprite_y)
+          ordered_x, ordered_y = xy_by_render_order(x, y)
+          sprite_class.from_tiled(tile, x: ordered_x * width, y: ordered_y * height)
+        end.compact
+      end
+    end
+
+    def animated_sprites
+      return [] unless visible?
+      return @animated_sprites if @animated_sprites
+
+      sprite_class = map.animated_sprite_class
+      width = map.attributes.tilewidth
+      height = map.attributes.tileheight
+
+      @animated_sprites = tiles.flat_map.with_index do |row, y|
+        row.map.with_index do |tile, x|
+          next unless tile&.animated?
+
+          ordered_x, ordered_y = xy_by_render_order(x, y)
+          sprite_class.from_tiled(tile, x: ordered_x * width, y: ordered_y * height)
         end.compact
       end
     end
@@ -125,6 +137,19 @@ module Tiled
 
     def raise_unsupported_render_order!
       raise UnsupportedRenderOrder, "Map for Layer #{name} has unsupported renderorder: #{render_order}"
+    end
+
+    def xy_by_render_order(x, y)
+      ordered_y = case render_order
+                  when RIGHT_DOWN
+                    (map.attributes.height - (y + 1))
+                  when RIGHT_UP
+                    y
+                  else
+                    raise_unsupported_render_order!
+                  end
+
+      [x, ordered_y]
     end
   end
 end

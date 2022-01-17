@@ -3,15 +3,15 @@ module Tiled
     include Tiled::Serializable
     include Tiled::WithAttributes
 
-    attr_reader :map, :path, :sprite_class
+    attr_reader :map, :path, :sprite_class, :animated_sprite_class
     attributes :id, :tiledversion, :orientation, :renderorder, :compressionlevel, :width, :height,
       :tilewidth, :tileheight, :hexsidelength, :staggeraxis, :staggerindex, :backgroundcolor, :nextlayerid,
       :nextobjectid, :infinite
 
-
-    def initialize(path, sprite_class = Sprite)
+    def initialize(path, sprite_class = Sprite, animated_sprite_class = AnimatedSprite)
       @path = path
       @sprite_class = sprite_class
+      @animated_sprite_class = animated_sprite_class
     end
 
     def load
@@ -31,6 +31,7 @@ module Tiled
           objectlayer = ObjectLayer.new(self)
           objectlayer.from_xml_hash(child)
           layers.add objectlayer
+          object_groups.add objectlayer
         when 'properties'
           custom_properties = child[:children]
         when 'tileset'
@@ -46,6 +47,10 @@ module Tiled
 
     def layers
       @layers ||= Layers.new
+    end
+
+    def object_groups
+      @object_groups ||= Layers.new
     end
 
     def tilesets

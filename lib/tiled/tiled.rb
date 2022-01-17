@@ -1,5 +1,6 @@
 require 'lib/tiled/with_attributes.rb'
 
+require 'lib/tiled/animated_sprite.rb'
 require 'lib/tiled/attribute_assignment.rb'
 require 'lib/tiled/attributes.rb'
 require 'lib/tiled/color.rb'
@@ -13,6 +14,8 @@ require 'lib/tiled/properties.rb'
 require 'lib/tiled/serializable.rb'
 require 'lib/tiled/sprite.rb'
 require 'lib/tiled/tile.rb'
+require 'lib/tiled/tile/animation.rb'
+require 'lib/tiled/tile/frame.rb'
 require 'lib/tiled/tiled_object.rb'
 require 'lib/tiled/tileset.rb'
 require 'lib/tiled/unknown_attribute.rb'
@@ -35,7 +38,11 @@ module Tiled
   class Map; end
   class Properties; end
   class Sprite; end
-  class Tile; end
+  class AnimatedSprite < Tiled::Sprite; end
+  class Tile;
+    class Animation; end
+    class Frame; end
+  end
   class Tileset; end
   class ObjectLayer; end
   class TiledObject; end
