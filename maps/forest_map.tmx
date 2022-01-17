@@ -16,7 +16,7 @@ Second line</property>
   <properties>
    <property name="tileset_property" type="int" value="543"/>
   </properties>
-  <image source="../sprites/tileset.png" width="130" height="130"/>
+  <image source="../sprites/forest/tileset.png" width="130" height="130"/>
   <terraintypes>
    <terrain name="Forest" tile="11"/>
    <terrain name="Water" tile="0"/>

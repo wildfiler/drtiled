@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="60" height="60" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="1">
- <tileset firstgid="1" source="[A]WaterFall_pipo.tsx"/>
+ <tileset firstgid="1" source="../sprites/pipo/[A]WaterFall_pipo.tsx"/>
  <tileset firstgid="577" name="[Base]BaseChip_pipo" tilewidth="32" tileheight="32" tilecount="1064" columns="8">
-  <image source="[Base]BaseChip_pipo.png" width="256" height="4256"/>
+  <image source="../sprites/pipo/[Base]BaseChip_pipo.png" width="256" height="4256"/>
  </tileset>
- <tileset firstgid="1641" source="[A]Grass_pipo.tsx"/>
- <tileset firstgid="2169" source="[A]Water_pipo.tsx"/>
- <tileset firstgid="5241" source="[A]Flower_pipo.tsx"/>
+ <tileset firstgid="1641" source="../sprites/pipo/[A]Grass_pipo.tsx"/>
+ <tileset firstgid="2169" source="../sprites/pipo/[A]Water_pipo.tsx"/>
+ <tileset firstgid="5241" source="../sprites/pipo/[A]Flower_pipo.tsx"/>
  <layer id="5" name="ground" width="60" height="60">
   <data encoding="csv">
 577,577,577,577,577,577,577,577,577,577,577,577,577,577,577,577,577,577,577,577,577,577,577,577,577,577,577,577,577,1943,1944,577,577,577,577,577,577,577,577,577,577,577,1710,1718,582,582,582,1717,1711,1711,1711,1711,1718,582,582,582,582,582,582,582,

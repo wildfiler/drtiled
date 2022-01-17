@@ -2,7 +2,7 @@ require 'lib/tiled/tiled.rb'
 
 def tick(args)
   if args.state.tick_count.zero?
-    map = Tiled::Map.new("maps/pipo_map/samplemap.tmx")
+    map = Tiled::Map.new("maps/pipo_map.tmx")
     map.load
     args.state.map = map
     target = args.render_target(:map)
