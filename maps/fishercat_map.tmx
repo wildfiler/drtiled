@@ -4,7 +4,7 @@
   <export target="map.csv" format="csv"/>
  </editorsettings>
  <tileset firstgid="1" name="forest" tilewidth="13" tileheight="13" tilecount="200" columns="10">
-  <image source="forest.png" width="130" height="260"/>
+  <image source="../sprites/fishercat/forest.png" width="130" height="260"/>
   <terraintypes>
    <terrain name="forest" tile="11"/>
    <terrain name="water" tile="81"/>
@@ -52,7 +52,7 @@
   <tile id="96" terrain=",1,1,1"/>
  </tileset>
  <tileset firstgid="201" name="service" tilewidth="13" tileheight="13" tilecount="9" columns="3">
-  <image source="service.png" width="39" height="39"/>
+  <image source="../sprites/fishercat/service.png" width="39" height="39"/>
  </tileset>
  <layer id="1" name="ground" width="20" height="20">
   <data encoding="csv">

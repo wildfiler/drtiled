@@ -1,9 +1,11 @@
 require 'lib/tiled/tiled.rb'
 
 MAPS = [
-  "maps/pipo_map/samplemap.tmx",
-  "maps/loose_tiles/samplemap.tmx",
-  "maps/chunks/samplemap.tmx",
+  "maps/pipo_map.tmx",
+  "maps/fishercat_map.tmx",
+  "maps/forest_map.tmx",
+  "maps/loose_tiles_map.tmx",
+  "maps/chunks_map.tmx",
 ]
 
 def tick(args)
