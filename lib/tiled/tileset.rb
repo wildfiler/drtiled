@@ -93,6 +93,27 @@ module Tiled
       ]
     end
 
+    # Method to render a tile directly from tileset, by ID.
+    #
+    # By default for sprites used Tiled::Sprite class, but you can override this by passing `sprite_class` argument
+    # to Map.new method.
+    #
+    # @example
+    #   args.outputs.sprites << args.state.map.tileset[0].sprite_at(x,y, id)
+    #
+    # @return <Tiled::Sprite> sprite object.
+    # @return Map#sprite_class object of custom class.
+    def sprite_at(x, y, id)
+
+      sprite_class = map.sprite_class
+      width = map.attributes.tilewidth.to_i
+      height = map.attributes.tileheight.to_i
+      map_height = map.attributes.height.to_i
+
+      sprite_class.from_tiled(x, y, tiles[id])
+
+    end
+
     def exclude_from_serialize
       super + %w[tiles_cache tiles]
     end
