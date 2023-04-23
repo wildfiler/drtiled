@@ -11,6 +11,18 @@ It supports TMX format directly allowing skip exporting to json or csv files ste
 
 [![Map updating with DRTiled lib](https://img.youtube.com/vi/RrWJ3s3WA3s/0.jpg)](https://youtu.be/RrWJ3s3WA3s)
 
+## Content
+
+- [Installation](#installation)
+- [Usage](#usage)
+    * [Accessing layers](#accessing-layers)
+    * [Working with tiles](#working-with-tiles)
+    * [Loading tilesets from files](#loading-tilesets-from-files)
+    * [Rendering sprite from tileset](#rendering-sprite-from-tileset)
+- [Running samples](#running-samples)
+- [Contributing](#contributing)
+- [Credits](#credits)
+- [License](#license)
 
 ## Installation
 
@@ -58,6 +70,36 @@ collisions_layer = map.layers['collisions']
 if collisions_layer.tile_at(new_x, new_y).properties.passable?
   player.move(new_x, new_y)
 end
+```
+
+### Loading tilesets from files
+
+Tilesets that referenced in map file are automatically loaded. But if you need to load separate tileset file to use it outside of a map, you can do it using `Tiled::Tileset.load` method. For example:
+
+```ruby
+require 'lib/tiled/tiled.rb'
+
+def tick(args)
+  if args.state.tick_count.zero?
+    tileset = Tiled::Tileset.load('sprites/player.tsx')
+    args.state.tileset = tileset
+
+    player_icon_id = 0
+    args.outputs.static_sprites << tileset.sprite_at(10, 10, player_icon_id)
+    args.state.player = [100, 100]
+  else
+    args.outputs.sprites << tileset.sprite_at(args.state.player.x, args.state.player.y, 2)
+  end
+end
+```
+
+### Rendering sprite from tileset
+
+No matter how tileset was loaded, you can use `sprite_at` method to render tile in desirable location by tile id:
+
+```ruby
+args.outputs.sprites << tileset.sprite_at(100, 200, 42)
+args.outputs.sprites << map.tilesets.first.sprite_at(200, 300, 42)
 ```
 
 ## Running samples

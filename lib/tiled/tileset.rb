@@ -7,8 +7,19 @@ module Tiled
     attributes :firstgid, :source, :name, :tilewidth, :tileheight, :spacing, :margin, :tilecount,
       :columns, :objectalignment
 
-    def initialize(map)
+    def initialize(map, path = nil, sprite_class = nil)
       @map = map
+      @path = path
+      @sprite_class = sprite_class || map&.sprite_class
+    end
+
+    def self.load(filename, sprite_class = Sprite)
+      xml = $gtk.parse_xml_file(filename)
+      hash = xml[:children].first
+
+      new(nil, filename, sprite_class).tap do |new_tileset|
+        new_tileset.from_xml_hash(hash)
+      end
     end
 
     # TODO: Add terraintypes, grid, tileoffset, wangsets
@@ -65,6 +76,17 @@ module Tiled
     def find(gid)
       id = gid - firstgid
       tiles[id]
+    end
+
+    # Method to render a tile directly from tileset, by ID.
+    #
+    # @example
+    #   args.outputs.sprites << args.state.map.tilesets[0].sprite_at(100, 100, 53)
+    #   args.outputs.sprites << args.state.tileset.sprite_at(50, 50, 23)
+    #
+    # @return <Tiled::Sprite> sprite object.
+    def sprite_at(x, y, id)
+      @sprite_class.from_tiled(x, y, tiles[id])
     end
 
     [:tilewidth, :tileheight, :columns, :spacing, :margin, :firstgid, :tilecount].each do |name|
