@@ -25,6 +25,10 @@ module Tiled
           layer = Layer.new(self)
           layer.from_xml_hash(child)
           layers.add layer
+        when 'objectgroup'
+          objectlayer = ObjectLayer.new(self)
+          objectlayer.from_xml_hash(child)
+          layers.add objectlayer
         when 'properties'
           properties.from_xml_hash(child[:children])
         when 'tileset'
