@@ -79,51 +79,7 @@ module Tiled
           }
         when :polygon
           # Get the starting point of the polygon
-          x_offset = object.x + object.points[0].x - 1
-          y_offset = object.y + object.points[0].y
-
-          # Find the top and bottom of the polygon
-          y_values = object.points.map { |p| p.y.to_i }
-          min_y, max_y = y_values.min, y_values.max
-
-          # Similar to the circle, this is drawn as a bunch of horizontal lines
-          (max_y - min_y).times do |y|
-            # We need to get the intersections where a horizontal line
-            # across the screen crosses the edges of the polygon
-            intersections = []
-
-            y += min_y
-
-            object.points.each_with_index do |point, index|
-              next_point = object.points[(index + 1) % object.points.length]
-
-              # We're iterating over each point to find the lines where the
-              # "scan line" that we're drawing intersects. This will only hit
-              # twice, once on each side
-              if (point.y <= y && next_point.y > y) || (next_point.y <= y && point.y > y)
-                if point.y == next_point.y
-                  # The edge is horizontal, so the intersection is just the
-                  # X-coordinate of the point
-                  intersections << x_offset + point.x
-                else
-                  # Find the X-coordinate where the edge intersects the
-                  # row using the equation of the line
-                  intersections << x_offset +
-                    ((y - point.y) * (next_point.x - point.x) /
-                     (next_point.y - point.y)) + point.x
-                end
-              end
-            end
-
-            screen_y = y_offset + y
-
-            outputs_layer << {
-              x: intersections[0], y: screen_y,
-              x2: intersections[1], y2: screen_y,
-              **color.to_h,
-              a: (color.a * 0.7).to_i
-            }
-          end
+          offset = [object.x + object.points[0].x, object.y + object.points[0].y]
 
           # Draw the outline connecting each point
           object.points.each_with_index do |point, index|
