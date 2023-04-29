@@ -75,7 +75,7 @@ module Tiled
             path: :ellipse,
             source_x: 0, source_y: 0,
             source_w: diameter, source_h: diameter,
-            a: 100, **color.to_h
+            **color.to_h, a: color.a * 0.7
           }
         when :polygon
           # Get the starting point of the polygon
