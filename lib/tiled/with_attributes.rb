@@ -42,6 +42,15 @@ module Tiled
       attributes.respond_to?(name) || super
     end
 
+    # Overrides Kernel#id if there is an :id attribute
+    def id
+      if attributes.respond_to?(:id)
+        attributes.send :id
+      else
+        super
+      end
+    end
+
     def self.included(base)
       base.extend(ClassMethods)
     end
