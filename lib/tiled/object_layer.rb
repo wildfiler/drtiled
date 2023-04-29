@@ -16,6 +16,7 @@ module Tiled
     # @return [Tiled::ObjectLayer] self
     def from_xml_hash(hash)
       raw_attributes = hash[:attributes]
+      raw_attributes['visible'] = raw_attributes['visible'] != '0'
       raw_attributes['color'] = Color.from_tiled_rgba(raw_attributes['color'])
 
       attributes.add(raw_attributes)
@@ -107,7 +108,7 @@ module Tiled
 
     # @return [Boolean] whether or not the layer is visible
     def visible?
-      visible != 0
+      visible
     end
   end
 end
