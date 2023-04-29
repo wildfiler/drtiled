@@ -37,6 +37,8 @@ module Tiled
   class Sprite; end
   class Tile; end
   class Tileset; end
+  class ObjectLayer; end
+  class TiledObject; end
 
   class UnknownAttribute < NoMethodError; end
   class Error < StandardError; end

@@ -4,7 +4,7 @@ module Tiled
     include Tiled::WithAttributes
 
     attr_reader :map, :objects
-    attributes :id, :color, :r, :g, :b
+    attributes :id, :color, :r, :g, :b, :visible
 
     def initialize(map)
       @map = map
@@ -15,21 +15,26 @@ module Tiled
     # @param hash [Hash] hash loaded from xml file of map.
     # @return [Tiled::ObjectLayer] self
     def from_xml_hash(hash)
-      hash[:attributes]['visible'] = hash[:attributes]['visible'] != '0'
-      attributes.add(hash[:attributes])
+      raw_attributes = hash[:attributes]
+      raw_attributes['color'] = Color.from_tiled_rgba(raw_attributes['color'])
+
+      attributes.add(raw_attributes)
 
       @objects = hash[:children].map do |child|
         TiledObject.new(map, child[:attributes], child[:children])
       end
 
-      red, green, blue = color[1..-1].chars.each_slice(2).map { |ch1, ch2| (ch1 + ch2).to_i(16) }
-      attributes.add({r: red, g: green, b: blue})
-
       self
     end
 
-    # Renders the objects to the `args.outputs.debug`.
-    def render_debug(args)
+    def sprites
+      []
+    end
+
+    # Renders the objects to the `outputs_layer`.
+    # @param args `args` from `tick` method
+    # @param output_layer one of `args.outputs`, works with `primitives` and `debug`
+    def render_debug(args, outputs_layer)
       return unless visible?
 
       # Resolution of circle
@@ -44,34 +49,33 @@ module Tiled
           length = Math::sqrt(radius * radius - height * height)
           args.render_target(:ellipse).lines << {
             x: i, y: radius - length, x2: i, y2: radius + length,
-            r: r, g: g, b: b
+            **color.to_h
           }
         end
 
         args.state.tiled_circle_initialized = true
       end
 
-      @objects.each do |object|
+      objects.each do |object|
         case object.shape
         when :rectangle
-          data = {
+          border = {
+            primitive_marker: :border,
             x: object.x, y: object.y,
             w: object.width, h: object.height,
-            r: r, g: g, b: b
+            **color.to_h
           }
+          solid = border.merge(primitive_marker: :solid, a: color.a * 0.7)
 
-          args.outputs.debug << [
-            data.merge({ primitive_marker: :solid, a: 100 }),
-            data.to_border
-          ]
+          outputs_layer << [border, solid]
         when :ellipse
-          args.outputs.debug << {
+          outputs_layer << {
             x: object.x, y: object.y,
             w: object.width, h: object.height,
             path: :ellipse,
             source_x: 0, source_y: 0,
             source_w: diameter, source_h: diameter,
-            a: 100
+            a: 255
           }
         when :polygon
           # Get the starting point of the polygon
@@ -113,10 +117,11 @@ module Tiled
 
             screen_y = y_offset + y
 
-            args.outputs.debug << {
+            outputs_layer << {
               x: intersections[0], y: screen_y,
               x2: intersections[1], y2: screen_y,
-              r: r, g: g, b: b, a: 100
+              **color.to_h,
+              a: (color.a * 0.7).to_i
             }
           end
 
@@ -124,20 +129,21 @@ module Tiled
           object.points.each_with_index do |point, index|
             next_point = object.points[(index + 1) % object.points.length]
 
-            args.outputs.debug << {
+            outputs_layer << {
               x: x_offset + point.x, y: y_offset + point.y,
               x2: x_offset + next_point.x, y2: y_offset + next_point.y,
-              r: r, g: g, b: b
+              **color.to_h
             }
           end
         when :point
           size = 10
-          args.outputs.debug << {
+          outputs_layer << {
             x: object.x - (size / 2.0), y: object.y - (size / 2.0),
             w: size, h: size,
             path: :ellipse,
             source_x: 0, source_y: 0,
-            source_w: diameter, source_h: diameter
+            source_w: diameter, source_h: diameter,
+            **color.to_h
           }
         end
       end
@@ -145,7 +151,7 @@ module Tiled
 
     # @return [Boolean] whether or not the layer is visible
     def visible?
-      visible
+      visible != 0
     end
   end
 end
