@@ -116,9 +116,9 @@ object_layer.objects.each do |object|
   end
 end
 
-# Renders the objects to args.state.debug as long as the
+# Renders the objects to args.outputs.debug as long as the
 # layer is set to visible in Tiled
-object_layer.render_debug
+object_layer.render_debug(args, args.outputs.debug)
 ```
 
 `#shape` will give you one of the following:
