@@ -49,7 +49,7 @@ module Tiled
           length = Math::sqrt(radius * radius - height * height)
           args.render_target(:ellipse).lines << {
             x: i, y: radius - length, x2: i, y2: radius + length,
-            **color.to_h
+            r: 255, g: 255, b: 255
           }
         end
 
@@ -75,7 +75,7 @@ module Tiled
             path: :ellipse,
             source_x: 0, source_y: 0,
             source_w: diameter, source_h: diameter,
-            a: 255
+            a: 100, **color.to_h
           }
         when :polygon
           # Get the starting point of the polygon
@@ -86,8 +86,8 @@ module Tiled
             next_point = object.points[(index + 1) % object.points.length]
 
             outputs_layer << {
-              x: x_offset + point.x, y: y_offset + point.y,
-              x2: x_offset + next_point.x, y2: y_offset + next_point.y,
+              x: offset.x + point.x, y: offset.y + point.y,
+              x2: offset.x + next_point.x, y2: offset.y + next_point.y,
               **color.to_h
             }
           end
