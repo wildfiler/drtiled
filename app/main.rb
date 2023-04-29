@@ -13,6 +13,7 @@ def tick(args)
   args.state.current_map_index ||= 0
   args.state.loaded_maps ||= {}
   args.state.show_objects ||= false
+  args.state.map_rendered ||= false
 
   if args.state.loaded_maps.empty?
     args.outputs.primitives << {
@@ -32,14 +33,18 @@ def tick(args)
   end
 
   if map = args.state.loaded_maps[MAPS[args.state.current_map_index]]
-    target = args.render_target(:map)
-    attributes = map.attributes
-    target.width = attributes.width.to_i * attributes.tilewidth.to_i
-    target.height = attributes.height.to_i * attributes.tileheight.to_i
-    target.sprites << map.layers.map(&:sprites)
+    unless args.state.map_rendered
+      target = args.render_target(:map)
+      attributes = map.attributes
+      target.width = attributes.width.to_i * attributes.tilewidth.to_i
+      target.height = attributes.height.to_i * attributes.tileheight.to_i
+      target.sprites << map.layers.map(&:sprites)
 
-    if args.state.show_objects && map.layers['objects_test']
-      map.layers['objects_test'].render_debug(args, target.debug)
+      if args.state.show_objects && map.layers['objects_test']
+        map.layers['objects_test'].render_debug(args, target.debug)
+      end
+
+      args.state.map_rendered = true
     end
 
     args.outputs.primitives << {
@@ -69,12 +74,21 @@ def tick(args)
   if args.inputs.keyboard.key_down.right
     args.state.current_map_index += 1
     args.state.current_map_index = 0 if args.state.current_map_index > MAPS.length - 1
+    args.state.map_rendered = false
   end
   if args.inputs.keyboard.key_down.left
     args.state.current_map_index -= 1
     args.state.current_map_index = MAPS.length - 1 if args.state.current_map_index < 0
+    args.state.map_rendered = false
   end
   if args.inputs.keyboard.key_down.o
     args.state.show_objects = !args.state.show_objects
+    args.state.map_rendered = false
   end
+
+  args.outputs.labels << {
+    x: args.grid.left.shift_right(10),
+    y: args.grid.bottom.shift_up(25),
+    text: "#{args.gtk.current_framerate.to_i} fps"
+  }.label
 end
