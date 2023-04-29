@@ -12,6 +12,7 @@ MAPS = [
 def tick(args)
   args.state.current_map_index ||= 0
   args.state.loaded_maps ||= {}
+  args.state.show_objects ||= false
 
   if args.state.loaded_maps.empty?
     args.outputs.primitives << {
@@ -37,6 +38,9 @@ def tick(args)
     target.height = attributes.height.to_i * attributes.tileheight.to_i
     target.sprites << map.layers.map(&:sprites)
 
+    if args.state.show_objects && map.layers['objects_test']
+      map.layers['objects_test'].render_debug(args, target.debug)
+    end
 
     args.outputs.primitives << {
       x: 25,
@@ -47,9 +51,17 @@ def tick(args)
 
     args.outputs.primitives << {
       x: 25,
-      y: 720 - 25 - 25,
+      y: 720 - 50,
       text: "(press left/right arrow key to swap)"
     }.label
+
+    if map.layers['objects_test']
+      args.outputs.primitives << {
+        x: 25,
+        y: 720 - 75,
+        text: "(press 'o' to show objects layer)"
+      }.label
+    end
 
     args.outputs.sprites << [(1280 - 720)/2, 0, 720, 720, :map]
   end
@@ -61,5 +73,8 @@ def tick(args)
   if args.inputs.keyboard.key_down.left
     args.state.current_map_index -= 1
     args.state.current_map_index = MAPS.length - 1 if args.state.current_map_index < 0
+  end
+  if args.inputs.keyboard.key_down.o
+    args.state.show_objects = !args.state.show_objects
   end
 end

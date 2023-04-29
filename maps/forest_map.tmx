@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="13" tileheight="13" infinite="0" nextlayerid="3" nextobjectid="1">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="13" tileheight="13" infinite="0" nextlayerid="4" nextobjectid="15">
  <editorsettings>
   <export target="map1.json" format="json"/>
  </editorsettings>
@@ -95,4 +95,18 @@ Second line</property>
 86,86,86,86,82,82,85,91,93,0
 </data>
  </layer>
+ <objectgroup color="#b9352d" id="3" name="objects_test">
+  <object id="5" x="13.3472" y="13.8415">
+   <polygon points="0,0 -0.49434,12.1113 8.40378,29.9076 21.5038,44.4906 38.0642,62.0396 64.5113,61.7925 75.3868,50.917 76.3755,27.9302 68.9604,14.8302 57.0962,4.20189 42.2661,0.98868"/>
+  </object>
+  <object id="6" x="103.317" y="117.653">
+   <ellipse/>
+  </object>
+  <object id="7" x="110.238" y="70.6906">
+   <point/>
+  </object>
+  <object id="12" x="0" y="84" width="24" height="46"/>
+  <object id="13" x="24" y="96" width="38" height="34"/>
+  <object id="14" x="62" y="110" width="22" height="20"/>
+ </objectgroup>
 </map>
