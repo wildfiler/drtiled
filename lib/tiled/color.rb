@@ -1,6 +1,6 @@
 module Tiled
   class Color
-    def initialize(r = 0, g = 0, b = 0, a = 0)
+    def initialize(r = 0, g = 0, b = 0, a = 255)
       @color = [r, g, b, a]
     end
 
@@ -22,10 +22,21 @@ module Tiled
 
     # Tiled color format is #AARRGGBB
     def self.from_tiled_rgba(string)
-      a = Integer(string[1,2], 16)
-      r = Integer(string[3,2], 16)
-      g = Integer(string[5,2], 16)
-      b = Integer(string[7,2], 16)
+      return new unless string
+
+      string = string[1..-1] if string.start_with?('#')
+      if string.length == 4
+        a = Integer(string[0, 2], 16)
+        r = Integer(string[2, 2], 16)
+        g = Integer(string[4, 2], 16)
+        b = Integer(string[6, 2], 16)
+      else
+        a = 255
+        r = Integer(string[0, 2], 16)
+        g = Integer(string[2, 2], 16)
+        b = Integer(string[4, 2], 16)
+      end
+
       new(r, g, b, a)
     end
 
@@ -43,7 +54,7 @@ module Tiled
     end
 
     def to_s
-      "##{@color.map{|v| v.to_s(16)}.join}"
+      "##{@color.map{|v| sprintf("%02x", v)}.join}"
     end
 
     def to_a
