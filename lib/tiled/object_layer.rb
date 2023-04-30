@@ -81,20 +81,18 @@ module Tiled
         when :polygon
           target = :"polygon#{object.id}"
 
-          # Find the top and bottom of the polygon
-          y_values = object.points.map { |p| p.y }
-          min_y, max_y = y_values.min, y_values.max
-          # Find the sides
-          x_values = object.points.map { |p| p.x }
-          min_x, max_x = x_values.min, x_values.max
+          # The points on the polygon can go below zero, but we can't render to pixel < 0
+          # on a render target. We'll need these to calculate some offsets
+          min_x = object.points.map(&:x).min
+          min_y = object.points.map(&:y).min
 
           args.state.polygon_cached ||= {}
           unless args.state.polygon_cached[target]
-            # Get the starting point of the polygon
+            # Calculate the starting point of the polygon
             offset = [object.points[0].x * 2 - min_x + 1, object.points[0].y * 2 - min_y + 1]
 
             # Similar to the circle, this is drawn as a bunch of horizontal lines
-            (max_y - min_y).to_i.times do |y|
+            object.height.to_i.times do |y|
               # We need to get the intersections where a horizontal line
               # across the screen crosses the edges of the polygon
               intersections = []
@@ -157,16 +155,13 @@ module Tiled
             args.state.polygon_cached[target] = true
           end
 
-          width = max_x - min_x + 2
-          height = max_y - min_y + 2
-
           outputs_layer << {
             x: object.x - (object.points[0].x - min_x) - 1,
-            y: object.y - (object.points[0].y - min_y) - 1,
-            w: width, h: height,
+            y: object.y - (object.points[0].y - min_y) + object.height - 1,
+            w: object.width, h: object.height,
             path: target,
             source_x: 0, source_y: 0,
-            source_w: width, source_h: height,
+            source_w: object.width, source_h: object.height,
             **color.to_h
           }
         when :point

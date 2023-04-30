@@ -19,13 +19,21 @@ module Tiled
             pt.split(',').map(&:to_f).tap { |coords| coords.y *= -1 }
           end
         )
-      end
 
-      # Convert these attributes to floats
-      %w[width height x].each { |attr| attributes.add(attr => attrs[attr].to_f) }
+        x_values = points.map(&:x)
+        y_values = points.map(&:y)
+
+        attributes.add({
+          width: x_values.max - x_values.min + 2,
+          height: y_values.max - y_values.min + 2
+        })
+      else
+        %w[width height].each { |attr| attributes.add(attr => attrs[attr].to_f) }
+      end
 
       # Flip Y-axis
       attributes.add('y' => (map.height.to_f * map.tileheight.to_f) - (attrs['y'].to_f + height))
+      attributes.add('x' => attrs['x'].to_f)
     end
   end
 end
