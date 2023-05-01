@@ -4,13 +4,15 @@ module Tiled
     include Tiled::WithAttributes
 
     attr_reader :map
-    attributes :id, :x, :y, :width, :height, :shape, :points
+    attributes :id, :gid, :x, :y, :width, :height, :type, :points
 
     def initialize(map, attrs, children)
       @map = map
-      attributes.add(id: attrs['id'], shape: children.any? ? children.first[:name].to_sym : :rectangle)
+      attributes.add(id: attrs['id'], gid: attrs['gid']&.to_i)
 
-      if shape == :polygon
+      attributes.add(type: children.any? ? children.first[:name].to_sym : gid ? :tile : :rectangle)
+
+      if type == :polygon
         attributes.add(
           # Input format for the points is: "0,0 64,-64 64,0"
           # This is turned into: [[0, 0], [64, 64], [64, 0]]
@@ -32,7 +34,8 @@ module Tiled
       end
 
       # Flip Y-axis
-      attributes.add('y' => (map.height.to_f * map.tileheight.to_f) - (attrs['y'].to_f + height))
+      attributes.add('y' => (map.height.to_f * map.tileheight.to_f) -
+                            (attrs['y'].to_f + (type == :tile ? 0 : height)))
       attributes.add('x' => attrs['x'].to_f)
     end
   end

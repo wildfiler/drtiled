@@ -33,10 +33,12 @@ module Tiled
     end
 
     # Renders the objects to the `outputs_layer`.
-    # @param args `args` from `tick` method
-    # @param output_layer one of `args.outputs`, works with `primitives` and `debug`
-    def render_debug(args, outputs_layer)
+    # @param args [GTK::Args] `args` from `tick` method
+    # @param target [Symbol] the output target, either :primitives or :debug
+    def render(args, target=:primitives)
       return unless visible?
+
+      outputs_layer = args.outputs.send(target)
 
       # Resolution of circle
       radius = 300
@@ -58,7 +60,10 @@ module Tiled
       end
 
       objects.each do |object|
-        case object.shape
+        case object.type
+        when :tile
+          outputs_layer << Sprite.from_tiled(object.x, object.y, map.find_tile(object.gid),
+                                             w: object.width, h: object.height)
         when :rectangle
           border = {
             primitive_marker: :border,
