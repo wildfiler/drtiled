@@ -92,10 +92,8 @@ module Tiled
     [:tilewidth, :tileheight, :columns, :spacing, :margin, :firstgid, :tilecount].each do |name|
       define_method name do
         if attributes.respond_to? name
-          attributes.send(name).to_i
-        else
-          0
-        end
+          attributes.send(name)
+        end || 0
       end
     end
 
