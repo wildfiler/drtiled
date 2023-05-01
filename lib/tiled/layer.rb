@@ -18,6 +18,7 @@ module Tiled
     # @return [Tiled::Layer] self
     def from_xml_hash(hash)
       raw_attributes = hash[:attributes]
+      raw_attributes['visible'] = raw_attributes['visible'] != '0'
       raw_attributes['offset'] = [raw_attributes.delete('offsetx').to_f,
                                  -raw_attributes.delete('offsety').to_f]
       raw_attributes['parallax'] = [raw_attributes.delete('parallaxx')&.to_f || 1.0,
@@ -51,7 +52,7 @@ module Tiled
     # Get tile by x, y coordinates (0, 0 is based on tile render order)
     # @return [Tiled::Tile, nil] tile at x, y coordinate on this layer or `nil`
     def tile_at(x, y)
-      tiles[render_order == RIGHT_DOWN ? y : map.attributes.height.to_i - 1 - y][x]
+      tiles[render_order == RIGHT_DOWN ? y : map.attributes.height - 1 - y][x]
     end
 
     # Method to get array of visible and renderable sprites from layer.
@@ -69,9 +70,9 @@ module Tiled
       return @sprites if @sprites
 
       sprite_class = map.sprite_class
-      width = map.attributes.tilewidth.to_i
-      height = map.attributes.tileheight.to_i
-      map_height = map.attributes.height.to_i
+      width = map.attributes.tilewidth
+      height = map.attributes.tileheight
+      map_height = map.attributes.height
 
       @sprites = tile_rows.flat_map.with_index do |row, y|
         row.map.with_index do |tile, x|
@@ -94,10 +95,9 @@ module Tiled
       @properties ||= Properties.new(self)
     end
 
-    # Return `attributes.visible` converted to boolean
-    # @return [Boolean]
+    # @return [Boolean] whether or not the layer is visible
     def visible?
-      visible != '0'
+      visible
     end
 
     def exclude_from_serialize

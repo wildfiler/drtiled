@@ -12,7 +12,7 @@ module Tiled
 
       attributes.add(object_type: detect_type(attrs, children))
 
-      if type == :polygon
+      if object_type == :polygon
         attributes.add(
           # Input format for the points is: "0,0 64,-64 64,0"
           # This is turned into: [[0, 0], [64, 64], [64, 0]]
@@ -30,13 +30,21 @@ module Tiled
           height: y_values.max - y_values.min + 2
         })
       else
-        %w[width height].each { |attr| attributes.add(attr => attrs[attr].to_f) }
+        %w[width height].each { |attr| attributes.add(attr => attrs[attr]) }
       end
 
       # Flip Y-axis
-      attributes.add('y' => (map.height.to_f * map.tileheight.to_f) -
+      attributes.add('y' => (map.height * map.tileheight) -
                             (attrs['y'].to_f + (object_type == :tile ? 0 : height)))
-      attributes.add('x' => attrs['x'].to_f)
+      attributes.add('x' => attrs['x'])
+    end
+
+    [:width, :height].each do |name|
+      define_method name do
+        if attributes.respond_to? name
+          attributes.send(name)
+        end || 0
+      end
     end
 
     private

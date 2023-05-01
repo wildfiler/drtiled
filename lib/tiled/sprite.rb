@@ -21,14 +21,14 @@ module Tiled
     def self.from_tiled(tile, x:, y:, w: nil, h: nil)
       new(
         path: tile.path,
-        x: x.to_i,
-        y: y.to_i,
-        w: w || tile.tile_w.to_i,
-        h: h || tile.tile_h.to_i,
-        tile_x: tile.tile_x.to_i,
-        tile_y: tile.tile_y.to_i,
-        tile_w: tile.tile_w.to_i,
-        tile_h: tile.tile_h.to_i,
+        x: x,
+        y: y,
+        w: w || tile.tile_w,
+        h: h || tile.tile_h,
+        tile_x: tile.tile_x,
+        tile_y: tile.tile_y,
+        tile_w: tile.tile_w,
+        tile_h: tile.tile_h,
       )
     end
   end
