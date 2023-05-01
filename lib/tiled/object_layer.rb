@@ -4,7 +4,7 @@ module Tiled
     include Tiled::WithAttributes
 
     attr_reader :map, :objects
-    attributes :id, :color, :r, :g, :b, :visible
+    attributes :id, :color, :r, :g, :b, :visible, :offset, :parallax
 
     def initialize(map)
       @map = map
@@ -18,6 +18,10 @@ module Tiled
       raw_attributes = hash[:attributes]
       raw_attributes['visible'] = raw_attributes['visible'] != '0'
       raw_attributes['color'] = Color.from_tiled_rgba(raw_attributes['color'])
+      raw_attributes['offset'] = [raw_attributes.delete('offsetx').to_f,
+                                 -raw_attributes.delete('offsety').to_f]
+      raw_attributes['parallax'] = [raw_attributes.delete('parallaxx')&.to_f || 1.0,
+                                    raw_attributes.delete('parallaxy')&.to_f || 1.0]
 
       attributes.add(raw_attributes)
 
