@@ -108,26 +108,26 @@ Object layers can be found using `Map#layers` as well.
 
 ```ruby
 object_layer = map.layers['object'] # Get it the same as any other layer
-object_layer.objects.each do |object|
-  next unless object.shape == :rectangle
 
-  if player_primitive.intersect_rect?([object.x, object.y, object.width, object.height])
+collision_layer = map.layers['collision']
+collision_layer.objects.each do |hitbox|
+  if player_primitive.intersect_rect?([hitbox.x, hitbox.y, hitbox.width, hitbox.height])
     # handle collision...
   end
 end
 
-# Renders the objects to args.outputs.debug as long as the
-# layer is set to visible in Tiled
-object_layer.render_debug(args, args.outputs.debug)
+object_layer.render(args) # Renders to args.outputs.primitives
+collision_layer.render(args, :debug) # Renders to args.outputs.debug
 ```
 
-`#shape` will give you one of the following:
+`#type` will give you one of the following:
 
  * `:rectangle`: The object has `x`, `y`, `width`, and `height` attributes
  * `:ellipse`: Same attributes as rectangle
  * `:polygon`: Has `x`, `y`, and a `points` attribute containing an array of
                points relative to the [x, y] point
  * `:point`: Has `x` and `y` attributes
+ * `:tile`: Has `gid`, `x`, `y`, `width`, and `height` attributes
 
 ## Running samples
 
