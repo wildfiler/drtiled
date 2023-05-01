@@ -18,7 +18,7 @@ module Tiled
     end
 
     # @return [Tiled::Sprite] return sprite object from `Tiled::Tile` object.
-    def self.from_tiled(x, y, tile, w: nil, h: nil)
+    def self.from_tiled(tile, x:, y:, w: nil, h: nil)
       new(
         path: tile.path,
         x: x.to_i,

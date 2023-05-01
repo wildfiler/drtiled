@@ -38,7 +38,7 @@ module Tiled
     def render(args, target=:primitives)
       return unless visible?
 
-      outputs_layer = args.outputs.send(target)
+      outputs_layer = target.is_a?(Symbol) ? args.outputs.send(target) : target
 
       # Resolution of circle
       radius = 300
@@ -60,9 +60,10 @@ module Tiled
       end
 
       objects.each do |object|
-        case object.type
+        case object.object_type
         when :tile
-          outputs_layer << Sprite.from_tiled(object.x, object.y, map.find_tile(object.gid),
+          outputs_layer << Sprite.from_tiled(map.find_tile(object.gid),
+                                             x: object.x, y: object.y,
                                              w: object.width, h: object.height)
         when :rectangle
           border = {

@@ -86,7 +86,7 @@ module Tiled
     #
     # @return <Tiled::Sprite> sprite object.
     def sprite_at(x, y, id)
-      @sprite_class.from_tiled(x, y, tiles[id])
+      @sprite_class.from_tiled(tiles[id], x: x, y: y)
     end
 
     [:tilewidth, :tileheight, :columns, :spacing, :margin, :firstgid, :tilecount].each do |name|

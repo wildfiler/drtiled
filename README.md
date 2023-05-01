@@ -118,6 +118,7 @@ end
 
 object_layer.render(args) # Renders to args.outputs.primitives
 collision_layer.render(args, :debug) # Renders to args.outputs.debug
+object_layer.render(args, args.render_target(:foo)) # You may also pass in a GTK::Outputs
 ```
 
 `#type` will give you one of the following:
