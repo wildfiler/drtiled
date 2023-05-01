@@ -7,7 +7,7 @@ module Tiled
     RIGHT_UP = 'right-up'.freeze
 
     attr_reader :map, :data
-    attributes :id, :name, :x, :y, :width, :height, :opacity, :visible, :tintcolor, :offsetx, :offsety
+    attributes :id, :name, :x, :y, :width, :height, :opacity, :visible, :tintcolor, :offset, :parallax
 
     def initialize(map)
       @map = map
@@ -17,7 +17,13 @@ module Tiled
     # @param hash [Hash] hash loaded from xml file of map.
     # @return [Tiled::Layer] self
     def from_xml_hash(hash)
-      attributes.add(hash[:attributes])
+      raw_attributes = hash[:attributes]
+      raw_attributes['offset'] = [raw_attributes.delete('offsetx').to_f,
+                                 -raw_attributes.delete('offsety').to_f]
+      raw_attributes['parallax'] = [raw_attributes.delete('parallaxx')&.to_f || 1.0,
+                                    raw_attributes.delete('parallaxy')&.to_f || 1.0]
+
+      attributes.add(raw_attributes)
 
       hash[:children].each do |child|
         case child[:name]
