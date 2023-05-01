@@ -79,7 +79,7 @@ module Tiled
           else
             raise_unsupported_render_order!
           end
-          sprite_class.from_tiled(x * width, sprite_y, tile)
+          sprite_class.from_tiled(tile, x: x * width, y: sprite_y)
         end.compact
       end
     end

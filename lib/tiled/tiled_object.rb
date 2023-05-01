@@ -10,7 +10,7 @@ module Tiled
       @map = map
       attributes.add(id: attrs['id'], gid: attrs['gid']&.to_i)
 
-      attributes.add(type: children.any? ? children.first[:name].to_sym : gid ? :tile : :rectangle)
+      attributes.add(object_type: detect_type(attrs, children))
 
       if type == :polygon
         attributes.add(
@@ -35,8 +35,20 @@ module Tiled
 
       # Flip Y-axis
       attributes.add('y' => (map.height.to_f * map.tileheight.to_f) -
-                            (attrs['y'].to_f + (type == :tile ? 0 : height)))
+                            (attrs['y'].to_f + (object_type == :tile ? 0 : height)))
       attributes.add('x' => attrs['x'].to_f)
+    end
+
+    private
+
+    def detect_type(attrs, children)
+      if children.any?
+        children.first[:name].to_sym
+      elsif attrs['gid']
+        :tile
+      else
+        :rectangle
+      end
     end
   end
 end
