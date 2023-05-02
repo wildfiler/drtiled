@@ -10,6 +10,10 @@ module Tiled
       @map = map
       attributes.add(id: attrs['id'], gid: attrs['gid']&.to_i)
 
+      if (props_index = children.find_index { |child| child[:name] == 'properties' })
+        properties.from_xml_hash(children.delete_at(props_index)[:children])
+      end
+
       attributes.add(object_type: detect_type(attrs, children))
 
       if object_type == :polygon
@@ -45,6 +49,10 @@ module Tiled
           attributes.send(name)
         end || 0
       end
+    end
+
+    def properties
+      @properties ||= Properties.new(self)
     end
 
     private

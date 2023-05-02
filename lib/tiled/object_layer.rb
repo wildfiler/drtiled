@@ -25,8 +25,13 @@ module Tiled
 
       attributes.add(raw_attributes)
 
-      @objects = hash[:children].map do |child|
-        TiledObject.new(map, child[:attributes], child[:children])
+      hash[:children].each do |child|
+        case child[:name]
+        when 'properties'
+          properties.from_xml_hash(child[:children])
+        when 'object'
+          @objects << TiledObject.new(map, child[:attributes], child[:children])
+        end
       end
 
       self
@@ -34,6 +39,15 @@ module Tiled
 
     def [](id)
       objects.find { |o| o.id == id }
+    end
+
+    def properties
+      @properties ||= Properties.new(self)
+    end
+
+    # @return [Boolean] whether or not the layer is visible
+    def visible?
+      visible
     end
 
     def sprites
@@ -190,11 +204,6 @@ module Tiled
           }
         end
       end
-    end
-
-    # @return [Boolean] whether or not the layer is visible
-    def visible?
-      visible
     end
   end
 end
