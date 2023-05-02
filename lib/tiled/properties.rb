@@ -23,7 +23,9 @@ module Tiled
       name = name.downcase.gsub(' ', '_')
 
       instance_variable_set("@#{name}", value)
+      instance_variable_set("@#{name}_type", type)
       define_singleton_method(name) { instance_variable_get(:"@#{name}") }
+      define_singleton_method("#{name}_type") { instance_variable_get(:"@#{name}_type") }
       define_singleton_method("#{name}?") { !!instance_variable_get(:"@#{name}") } if type == 'bool'
 
       self

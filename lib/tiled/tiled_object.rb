@@ -52,7 +52,7 @@ module Tiled
     end
 
     def properties
-      @properties ||= Properties.new(self)
+      @properties ||= Properties.new(map)
     end
 
     private
