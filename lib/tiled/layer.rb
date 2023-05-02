@@ -67,40 +67,14 @@ module Tiled
     # @return [Map#sprite_class] array of objects of custom class.
     def sprites
       return [] unless visible?
-      return @sprites if @sprites
 
-      sprite_class = map.sprite_class
-      width = map.attributes.tilewidth
-      height = map.attributes.tileheight
-
-
-      @sprites = tile_rows.flat_map.with_index do |row, y|
-        row.map.with_index do |tile, x|
-          next unless tile
-          next if tile.animated?
-
-          ordered_x, ordered_y = xy_by_render_order(x, y)
-          sprite_class.from_tiled(tile, x: ordered_x * width, y: ordered_y * height)
-        end.compact
-      end
+      @sprites ||= prepare_sprites(sprite_class: map.sprite_class, animated: false)
     end
 
     def animated_sprites
       return [] unless visible?
-      return @animated_sprites if @animated_sprites
 
-      sprite_class = map.animated_sprite_class
-      width = map.attributes.tilewidth
-      height = map.attributes.tileheight
-
-      @animated_sprites = tiles.flat_map.with_index do |row, y|
-        row.map.with_index do |tile, x|
-          next unless tile&.animated?
-
-          ordered_x, ordered_y = xy_by_render_order(x, y)
-          sprite_class.from_tiled(tile, x: ordered_x * width, y: ordered_y * height)
-        end.compact
-      end
+      @animated_sprites ||= prepare_sprites(sprite_class: map.animated_sprite_class, animated: true)
     end
 
     def properties
@@ -150,6 +124,21 @@ module Tiled
                   end
 
       [x, ordered_y]
+    end
+
+    def prepare_sprites(sprite_class:, animated:)
+      width = map.attributes.tilewidth
+      height = map.attributes.tileheight
+
+      tiles.flat_map.with_index do |row, y|
+        row.map.with_index do |tile, x|
+          next unless tile
+          next if tile.animated? != animated
+
+          ordered_x, ordered_y = xy_by_render_order(x, y)
+          sprite_class.from_tiled(tile, x: ordered_x * width, y: ordered_y * height)
+        end.compact
+      end
     end
   end
 end
