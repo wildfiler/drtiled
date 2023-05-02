@@ -46,6 +46,11 @@ module Tiled
       self
     end
 
+    # Finds a property by name, or returns nil.
+    def [](property)
+      respond_to?(property) ? instance_variable_get(:"@#{property}") : nil
+    end
+
     private
 
     def convert_value(children, raw_value, type)
