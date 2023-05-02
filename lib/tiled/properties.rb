@@ -20,10 +20,10 @@ module Tiled
     # @param value [Integer, Float, Boolean, String] value of added property
     # @return [Tiled::Properties] self
     def add(name, type = 'string', value)
+      name = name.downcase.gsub(' ', '_')
+
       instance_variable_set("@#{name}", value)
-      instance_variable_set("@#{name}_type", type)
       define_singleton_method(name) { instance_variable_get(:"@#{name}") }
-      define_singleton_method("#{name}_type") { instance_variable_get(:"@#{name}_type") }
       define_singleton_method("#{name}?") { !!instance_variable_get(:"@#{name}") } if type == 'bool'
 
       self
@@ -59,7 +59,12 @@ module Tiled
       when 'color'
         Color.from_tiled_rgba(raw_value)
       when 'object'
-        raw_value.to_i
+        @map.layers.find do |layer|
+          if layer.is_a?(ObjectLayer)
+            object = layer[raw_value.to_i]
+            break object if object
+          end
+        end
       when 'string'
         if raw_value
           raw_value
