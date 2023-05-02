@@ -59,6 +59,7 @@ module Tiled
     end
 
     # Renders the objects to the `outputs_layer`.
+    # Deprecated: This method will be removed, sooner or later. Beware becoming dependent on it.
     # @param args [GTK::Args] `args` from `tick` method
     # @param target [Symbol] the output target, either :primitives or :debug
     def render(args, target=:primitives)

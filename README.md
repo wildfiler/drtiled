@@ -115,7 +115,11 @@ collision_layer.objects.each do |hitbox|
     # handle collision...
   end
 end
+```
 
+The following is for development purposes and will eventually be removed; see below for a dedicated rendering library.
+
+```ruby
 object_layer.render(args) # Renders to args.outputs.primitives
 collision_layer.render(args, :debug) # Renders to args.outputs.debug
 object_layer.render(args, args.render_target(:foo).primitives) # You may also pass in a GTK::OutputsArray
@@ -136,6 +140,10 @@ object_layer.render(args, args.render_target(:foo).primitives) # You may also pa
 # clone drtiled somewhere
 ./dragonruby /path/to/drtiled
 ```
+
+## Rendering
+
+Check out [DRTiled Renderer](https://github.com/vinnydiehl/drtiled-renderer) for a lightweight plugin with a camera and rendering functions.
 
 ## Contributing
 
