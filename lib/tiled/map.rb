@@ -1,5 +1,4 @@
 module Tiled
-
   class Map
     include Tiled::Serializable
     include Tiled::WithAttributes
@@ -19,6 +18,9 @@ module Tiled
       xml = $gtk.parse_xml_file(@path)
       @map = xml[:children].first
       attributes.add(@map[:attributes])
+
+      custom_properties = nil
+
       map[:children].each do |child|
         case child[:name]
         when 'layer'
@@ -30,13 +32,16 @@ module Tiled
           objectlayer.from_xml_hash(child)
           layers.add objectlayer
         when 'properties'
-          properties.from_xml_hash(child[:children])
+          custom_properties = child[:children]
         when 'tileset'
           tileset = Tileset.new(self)
           tileset.from_xml_hash(child)
           tilesets << tileset
         end
       end
+
+      # This is done last so that it can parse the object properties
+      properties.from_xml_hash(custom_properties) if custom_properties
     end
 
     def layers

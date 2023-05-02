@@ -32,6 +32,10 @@ module Tiled
       self
     end
 
+    def [](id)
+      objects.find { |o| o.id == id }
+    end
+
     def sprites
       []
     end
