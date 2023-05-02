@@ -52,9 +52,8 @@ module Tiled
       @properties ||= Properties.new(self)
     end
 
-    #
     def animated?
-      !animation.nil?
+      @animated ||= !animation.nil?
     end
 
     private
