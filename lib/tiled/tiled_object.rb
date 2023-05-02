@@ -4,7 +4,7 @@ module Tiled
     include Tiled::WithAttributes
 
     attr_reader :map
-    attributes :id, :gid, :x, :y, :width, :height, :type, :points
+    attributes :id, :gid, :x, :y, :width, :height, :object_type, :points
 
     def initialize(map, attrs, children)
       @map = map
