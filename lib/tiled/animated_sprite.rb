@@ -8,12 +8,12 @@ module Tiled
     # @return [Tiled::AnimatedSprite] return sprite object from `Tiled::Tile` object.
     def self.from_tiled(tile, x:, y:, w: nil, h: nil)
       new(
-        x: x.to_i,
-        y: y.to_i,
-        w: tile.tile_w.to_i,
-        h: tile.tile_h.to_i,
-        tile_w: tile.tile_w.to_i,
-        tile_h: tile.tile_h.to_i,
+        x: x,
+        y: y,
+        w: w || tile.tile_w,
+        h: h || tile.tile_h,
+        tile_w: tile.tile_w,
+        tile_h: tile.tile_h,
         animation: tile.animation,
       )
     end
