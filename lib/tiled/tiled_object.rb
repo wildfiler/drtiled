@@ -38,9 +38,10 @@ module Tiled
       end
 
       # Flip Y-axis
-      attributes.add('y' => (map.height * map.tileheight) -
-                            (attrs['y'].to_f + (object_type == :tile ? 0 : height)))
-      attributes.add('x' => attrs['x'])
+      attributes.add(
+        'y' => map.pixelheight - (attrs['y'].to_f + (object_type == :tile ? 0 : height)),
+        'x' => attrs['x']
+      )
     end
 
     [:width, :height].each do |name|

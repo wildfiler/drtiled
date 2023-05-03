@@ -76,5 +76,13 @@ module Tiled
     def exclude_from_serialize
       super + %w[tiles_cache tilesets layers]
     end
+
+    def pixelwidth
+      width * tilewidth
+    end
+
+    def pixelheight
+      height * tileheight
+    end
   end
 end
