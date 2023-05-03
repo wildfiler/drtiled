@@ -49,10 +49,10 @@ module Tiled
       end
     end
 
-    # Get tile by x, y coordinates (0, 0 is based on tile render order)
+    # Get tile by x, y coordinates
     # @return [Tiled::Tile, nil] tile at x, y coordinate on this layer or `nil`
     def tile_at(x, y)
-      tiles[render_order == RIGHT_DOWN ? y : map.attributes.height - 1 - y][x]
+      tiles[y][x]
     end
 
     # Method to get array of visible and renderable sprites from layer.
