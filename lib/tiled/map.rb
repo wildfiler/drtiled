@@ -1,4 +1,9 @@
 module Tiled
+  FLIPPED_HORIZONTALLY_FLAG  = 0x80000000
+  FLIPPED_VERTICALLY_FLAG    = 0x40000000
+  FLIPPED_DIAGONALLY_FLAG    = 0x20000000
+  ROTATED_HEXAGONAL_120_FLAG = 0x10000000
+
   class Map
     include Tiled::Serializable
     include Tiled::WithAttributes
@@ -65,11 +70,41 @@ module Tiled
       return if gid.zero?
 
       @tiles_cache ||= {}
-      @tiles_cache[gid] ||= begin
+      return @tiles_cache[gid] if @tiles_cache[gid]
+
+      # The highest 4 bits of the GID are flags indicating the tile's orientation:
+      flip_horizontally = (gid & FLIPPED_HORIZONTALLY_FLAG) > 0
+      flip_vertically = (gid & FLIPPED_VERTICALLY_FLAG) > 0
+      flip_diagonally = (gid & FLIPPED_DIAGONALLY_FLAG) > 0
+
+      # Clear the flags
+      cleared_gid = gid & ~(
+        FLIPPED_HORIZONTALLY_FLAG |
+        FLIPPED_VERTICALLY_FLAG |
+        FLIPPED_DIAGONALLY_FLAG |
+        ROTATED_HEXAGONAL_120_FLAG
+      )
+
+      return if cleared_gid.zero?
+
+      # Using the original GID as the key for the cache
+      @tiles_cache[gid] = begin
         tileset = tilesets.detect do |tileset|
-          tileset.firstgid <= gid && tileset.firstgid + tileset.attributes.tilecount.to_i - 1 >= gid
+          tileset.firstgid <= cleared_gid &&
+            tileset.firstgid + tileset.attributes.tilecount.to_i - 1 >= cleared_gid
         end
-        tileset.find(gid) if tileset
+
+        if cleared_gid == gid
+          # No flip flags, we can just cache a reference
+          tileset&.find(cleared_gid)
+        else
+          # It's flipped; dup it, apply the reflections and cache that
+          tileset&.find(cleared_gid).dup.tap do |tile|
+            tile.flip! :horizontally if flip_horizontally
+            tile.flip! :vertically if flip_vertically
+            tile.flip! :diagonally if flip_diagonally
+          end
+        end
       end
     end
 

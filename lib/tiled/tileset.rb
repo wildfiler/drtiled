@@ -73,8 +73,8 @@ module Tiled
       @tiles ||= []
     end
 
-    def find(gid)
-      id = gid - firstgid
+    def find(cleared_gid)
+      id = cleared_gid - firstgid
       tiles[id]
     end
 

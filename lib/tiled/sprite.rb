@@ -29,6 +29,9 @@ module Tiled
         tile_y: tile.tile_y,
         tile_w: tile.tile_w,
         tile_h: tile.tile_h,
+        flip_horizontally: tile.flip_horizontally?,
+        flip_vertically: tile.flip_vertically?,
+        angle: tile.angle
       )
     end
   end
