@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="4" height="4" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
+ <properties>
+  <property name="some file" type="file" value="test_world.world"/>
+  <property name="test" propertytype="testenum" value="test 1"/>
+  <property name="test_class" type="class" propertytype="test_class">
+   <properties>
+    <property name="member1" value="1234"/>
+    <property name="test enum" propertytype="testenum" value="test 2"/>
+   </properties>
+  </property>
+ </properties>
+ <tileset firstgid="1" name="test" tilewidth="16" tileheight="16" tilecount="1" columns="1">
+  <image source="../sprites/transformations_test.png" width="16" height="16"/>
+ </tileset>
+ <layer id="1" name="Tile Layer 1" width="4" height="4">
+  <data encoding="csv">
+1,2684354561,3221225473,1610612737,
+2147483649,3758096385,1073741825,536870913,
+1073741825,536870913,2147483649,3758096385,
+3221225473,1610612737,1,2684354561
+</data>
+ </layer>
+</map>

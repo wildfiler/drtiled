@@ -65,9 +65,34 @@ module Tiled
       @tiles ||= []
     end
 
+    def transformed_tiles
+      @transformed_tiles ||= {}
+    end
+
+    def contain?(gid)
+      tile_id = gid_to_id(gid)
+
+      tile_id >= 0 && tile_id < tilecount
+    end
+
     def find(gid)
-      id = gid - firstgid
-      tiles[id]
+      tile = tiles[gid_to_id(gid)]
+
+      if Tiled::Gid.flags?(gid) && tile
+        transformed_tiles[gid] ||= Tile.new(tile, gid)
+      else
+        tile
+      end
+    end
+
+    # Return id in tileset from gid of map. Flags are ignored.
+    def gid_to_id(gid)
+      Tiled::Gid.without_flags(gid) - firstgid
+    end
+
+    # Return gid in map for tile id.
+    def id_to_gid(tile_id)
+      firstgid + tile_id
     end
 
     # Method to render a tile directly from tileset, by ID.
@@ -106,7 +131,7 @@ module Tiled
     end
 
     def exclude_from_serialize
-      super + %w[tiles_cache tiles]
+      super + %w[tiles_cache transformed_tiles tiles]
     end
   end
 end

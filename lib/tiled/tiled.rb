@@ -4,6 +4,8 @@ require 'lib/tiled/animated_sprite.rb'
 require 'lib/tiled/attribute_assignment.rb'
 require 'lib/tiled/attributes.rb'
 require 'lib/tiled/color.rb'
+require 'lib/tiled/gid.rb'
+require 'lib/tiled/gid/flags.rb'
 require 'lib/tiled/image.rb'
 require 'lib/tiled/layer.rb'
 require 'lib/tiled/layers.rb'
@@ -28,6 +30,9 @@ module Tiled
   module Serializable;end
   module Utils; end
   module WithAttributes; end
+  module Gid
+    class Flags; end
+  end
 
   class Attributes; end
   class Color; end
@@ -51,4 +56,5 @@ module Tiled
   class Error < StandardError; end
   class UnsupportedEncoding < Error; end
   class UnsupportedRenderOrder < Error; end
+  class UnsupportedFeature < Error; end
 end
