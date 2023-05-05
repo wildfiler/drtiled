@@ -42,17 +42,9 @@ module Tiled
           @image = Image.new(self)
           image.from_xml_hash(child)
         when 'tile'
-          begin
           tile = Tile.new(self)
           tile.from_xml_hash(child)
           tiles[tile.id] = tile
-          rescue StandardError => e
-            puts self
-            puts tile
-            puts "id: #{tile.id}"
-            puts "attributes.id: #{tile.attributes.id}"
-            raise e
-          end
         end
       end
 
