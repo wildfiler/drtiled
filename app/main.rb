@@ -7,6 +7,7 @@ MAPS = [
   "maps/loose_tiles_map.tmx",
   "maps/chunks_map.tmx",
   "maps/right_up_map.tmx",
+  "maps/transformations_map.tmx",
 ]
 
 def tick(args)

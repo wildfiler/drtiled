@@ -63,14 +63,9 @@ module Tiled
 
     def find_tile(gid)
       return if gid.zero?
+      return tiles_cache[gid] if tiles_cache.key?(gid)
 
-      @tiles_cache ||= {}
-      @tiles_cache[gid] ||= begin
-        tileset = tilesets.detect do |tileset|
-          tileset.firstgid <= gid && tileset.firstgid + tileset.attributes.tilecount.to_i - 1 >= gid
-        end
-        tileset.find(gid) if tileset
-      end
+      cache_tile(gid)
     end
 
     def exclude_from_serialize
@@ -83,6 +78,18 @@ module Tiled
 
     def pixelheight
       height * tileheight
+    end
+
+    private
+
+    def cache_tile(gid)
+      tileset = tilesets.detect { |tileset| tileset.contain?(gid) }
+      tile = tileset&.find(gid)
+      tiles_cache[gid] = tile
+    end
+
+    def tiles_cache
+      @tiles_cache ||= {}
     end
   end
 end
