@@ -33,6 +33,8 @@ module Tiled
     def from_xml_hash(hash)
       attributes.add(hash[:attributes])
 
+      init_from_tileset
+
       hash[:children].each do |child|
         case child[:name]
         when 'animation'
@@ -48,18 +50,17 @@ module Tiled
           @tile_y = 0
           @tile_w = img.width
           @tile_h = img.height
+        when 'objectgroup'
+          object_layer.from_xml_hash(child)
         end
       end
-
-      init_from_tileset unless @path
     end
 
     def init_empty(id)
       attributes.add({
         id: id,
       })
-      @path = tileset.image.path unless tileset.image.nil?
-      @tile_x, @tile_y, @tile_w, @tile_h = tileset.id_to_xywh(id)
+      init_from_tileset
     end
 
     def properties
@@ -74,6 +75,24 @@ module Tiled
       @gid ||= tileset.id_to_gid(id)
     end
 
+    def pixelheight
+      tile_h
+    end
+
+    def pixelwidth
+      tile_w
+    end
+
+    def object_layer
+      @object_layer ||= ObjectLayer.new(self)
+    end
+
+    def collision_objects(origin_x = 0, origin_y = 0)
+      object_layer.objects.map do |object|
+        object.to_primitive(origin_x, origin_y)
+      end
+    end
+
     private
 
     def parse_image(child)
@@ -83,7 +102,7 @@ module Tiled
     end
 
     def init_from_tileset
-      @path = tileset.image.path
+      @path = tileset.image&.path
       @tile_x, @tile_y, @tile_w, @tile_h = tileset.id_to_xywh(id.to_i)
     end
 

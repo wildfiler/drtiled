@@ -8,7 +8,11 @@ module Tiled
 
     def initialize(map, attrs, children)
       @map = map
-      attributes.add(id: attrs['id'], gid: attrs['gid']&.to_i)
+      attributes.add(
+        id: attrs['id'],
+        gid: attrs['gid']&.to_i,
+        name: attrs['name']
+      )
 
       if (props_index = children.find_index { |child| child[:name] == 'properties' })
         properties.from_xml_hash(children.delete_at(props_index)[:children])
@@ -54,6 +58,21 @@ module Tiled
 
     def properties
       @properties ||= Properties.new(map)
+    end
+
+    def to_primitive(origin_x, origin_y)
+      case object_type
+      when :rectangle
+        {
+          primitive_marker: :border,
+          x: origin_x + x,
+          y: origin_y + y,
+          w: width,
+          h: height,
+        }
+      else
+        raise UnsupportedFeature, "Not supported collision object type '#{object_type}'!"
+      end
     end
 
     private

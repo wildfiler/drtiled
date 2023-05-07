@@ -134,6 +134,28 @@ object_layer.render(args, args.render_target(:foo).primitives) # You may also pa
  * `:point`: Has `x` and `y` attributes
  * `:tile`: Has `gid`, `x`, `y`, `width`, and `height` attributes
 
+### Using tile collision
+
+You can access collisions for whole map or for one layer:
+```ruby
+# For the map:
+player_collided = map.collision_objects.any? do |object|
+  object.intersect_rect?([player.x + offset_x, player.y + offset_y, player.w, player.h])
+end
+
+# For a layer
+player_collided = map.layers['walls'].collision_objects.any? do |object|
+  object.intersect_rect?([player.x + offset_x, player.y + offset_y, player.w, player.h])
+end
+
+```
+
+Or access individual tile related objects:
+```ruby
+layer.tile_at(new_x, new_y).object_layer.objects
+```
+In this case all cooridates of object will be relative to tile. 
+
 ## Running samples
 
 ```bash

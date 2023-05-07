@@ -53,6 +53,10 @@ module Tiled
       @object_groups ||= Layers.new
     end
 
+    def collision_objects
+      @collision_objects ||= layers.flat_map(&:collision_objects)
+    end
+
     def tilesets
       @tilesets ||= []
     end
