@@ -77,6 +77,22 @@ module Tiled
       @animated_sprites ||= prepare_sprites(sprite_class: map.animated_sprite_class, animated: true)
     end
 
+    def collision_objects
+      @collision_objects ||= begin
+        width = map.attributes.tilewidth
+        height = map.attributes.tileheight
+
+        tiles.flat_map.with_index do |row, y|
+          row.flat_map.with_index do |tile, x|
+            next unless tile
+
+            ordered_x, ordered_y = xy_by_render_order(x, y)
+            tile.collision_objects(ordered_x * width, ordered_y * height)
+          end.compact
+        end
+      end
+    end
+
     def properties
       @properties ||= Properties.new(self)
     end
