@@ -11,6 +11,7 @@ require 'lib/tiled/layer.rb'
 require 'lib/tiled/layers.rb'
 require 'lib/tiled/layer_data.rb'
 require 'lib/tiled/map.rb'
+require 'lib/tiled/map_object.rb'
 require 'lib/tiled/object_layer.rb'
 require 'lib/tiled/properties.rb'
 require 'lib/tiled/serializable.rb'
@@ -18,7 +19,6 @@ require 'lib/tiled/sprite.rb'
 require 'lib/tiled/tile.rb'
 require 'lib/tiled/tile/animation.rb'
 require 'lib/tiled/tile/frame.rb'
-require 'lib/tiled/tiled_object.rb'
 require 'lib/tiled/tileset.rb'
 require 'lib/tiled/unknown_attribute.rb'
 require 'lib/tiled/utils.rb'
@@ -41,6 +41,7 @@ module Tiled
   class Layers; end
   class LayerData; end
   class Map; end
+  class MapObject; end
   class Properties; end
   class Sprite; end
   class AnimatedSprite < Tiled::Sprite; end
@@ -50,7 +51,6 @@ module Tiled
   end
   class Tileset; end
   class ObjectLayer; end
-  class TiledObject; end
 
   class UnknownAttribute < NoMethodError; end
   class Error < StandardError; end

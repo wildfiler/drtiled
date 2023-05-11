@@ -1,5 +1,5 @@
 module Tiled
-  class TiledObject
+  class MapObject
     include Tiled::Serializable
     include Tiled::WithAttributes
 
