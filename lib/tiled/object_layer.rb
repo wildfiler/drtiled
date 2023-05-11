@@ -30,7 +30,7 @@ module Tiled
         when 'properties'
           properties.from_xml_hash(child[:children])
         when 'object'
-          @objects << TiledObject.new(map, child[:attributes], child[:children])
+          @objects << MapObject.new(map, child[:attributes], child[:children])
         end
       end
 
