@@ -38,7 +38,7 @@ module Tiled
   class Color; end
   class Image; end
   class Layer; end
-  class Layers; end
+  class Layers < Array; end
   class LayerData; end
   class Map; end
   class MapObject; end

@@ -55,8 +55,8 @@ The tilesets and spritesheets used in map should be placed inside your game dir,
 
 ```ruby
 ground_layer = map.layers['ground'] # Get layer by name
-collisions_layer = map.layers['collisions']
-layer_5 = map.layers.at(5) # Get layer by index
+collisions_layer = map.layers[:collisions] # Symbols work too
+layer_5 = map.layers[5] # Get layer by index
 
 map.layers.select(&:visible?) # Get visible layers
 ```
