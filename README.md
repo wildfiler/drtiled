@@ -28,7 +28,7 @@ It supports TMX format directly allowing skip exporting to json or csv files ste
 
 1. Create a `lib` directory inside the base directory of your DR game.
 2. Copy `lib/tiled` directory to created `lib`.
-3. Add `require 'lib/tiled/tiled.rb` to the top of your `app/main.rb` file.
+3. Add `require 'lib/tiled/tiled.rb'` to the top of your `app/main.rb` file.
 
 
 ## Usage
@@ -154,7 +154,7 @@ Or access individual tile related objects:
 ```ruby
 layer.tile_at(new_x, new_y).object_layer.objects
 ```
-In this case all cooridates of object will be relative to tile. 
+In this case all coordinates of object will be relative to tile. 
 
 ## Running samples
 
