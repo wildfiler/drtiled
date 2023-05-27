@@ -14,7 +14,12 @@ module Tiled
     end
 
     def self.load(filename, sprite_class = Sprite)
+      raise TilesetNotFound, "Unable to locate tileset file: '#{filename}'." unless File.exists?(filename)
+
       xml = $gtk.parse_xml_file(filename)
+
+      raise ParseError, "Unable to parse tileset file: #{filename}." unless xml
+
       hash = xml[:children].first
 
       new(nil, filename, sprite_class).tap do |new_tileset|
@@ -27,8 +32,7 @@ module Tiled
       attributes.add(hash[:attributes])
 
       if source && !source.empty?
-        @path = Utils.relative_to_absolute(File.join(File.dirname(map.path), source))
-        hash = $gtk.parse_xml_file(path)[:children].first
+        hash = load_external_xml(source)
         attributes.add(hash[:attributes])
       end
 
@@ -128,6 +132,18 @@ module Tiled
         tilewidth,
         tileheight,
       ]
+    end
+
+    def load_external_xml(relative_path)
+      @path = Utils.relative_to_absolute(File.join(File.dirname(map.path), relative_path))
+
+      raise TilesetNotFound, "Unable to locate external tileset file: '#{relative_path}'" unless File.exists?(path)
+
+      xml = $gtk.parse_xml_file(path)
+
+      raise ParseError, "Unable to parse tileset file: #{relative_path}." unless xml
+
+      xml[:children].first
     end
 
     def exclude_from_serialize

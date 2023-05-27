@@ -57,4 +57,7 @@ module Tiled
   class UnsupportedEncoding < Error; end
   class UnsupportedRenderOrder < Error; end
   class UnsupportedFeature < Error; end
+  class ParseError < Error; end
+  class MapNotFound < Error; end
+  class TilesetNotFound < Error; end
 end

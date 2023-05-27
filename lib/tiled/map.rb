@@ -15,7 +15,12 @@ module Tiled
     end
 
     def load
-      xml = $gtk.parse_xml_file(@path)
+      raise MapNotFound, "Unable to locate map file: '#{path}'" unless File.exists?(path)
+
+      xml = $gtk.parse_xml_file(path)
+
+      raise ParseError, "Unable to parse map file: #{path}." unless xml
+
       @map = xml[:children].first
       attributes.add(@map[:attributes])
 
