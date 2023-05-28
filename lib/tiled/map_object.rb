@@ -4,14 +4,16 @@ module Tiled
     include Tiled::WithAttributes
 
     attr_reader :map
-    attributes :id, :gid, :x, :y, :width, :height, :object_type, :points
+
+    attributes :id, :gid, :x, :y, :width, :height, :name, :type, :object_type, :points
 
     def initialize(map, attrs, children)
       @map = map
       attributes.add(
         id: attrs['id'],
         gid: attrs['gid']&.to_i,
-        name: attrs['name']
+        name: attrs['name'],
+        type: attrs['type'],
       )
 
       if (props_index = children.find_index { |child| child[:name] == 'properties' })
@@ -58,6 +60,12 @@ module Tiled
 
     def properties
       @properties ||= Properties.new(map)
+    end
+
+    def tile
+      return unless object_type == :tile
+
+      @tile ||= map.find_tile(gid)
     end
 
     def to_primitive(origin_x, origin_y)
