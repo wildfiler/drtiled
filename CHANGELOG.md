@@ -11,9 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Errors handling on wrong path to files, or incorrect tmx/tsx files (#37)
 - File properties support (#38)
-- `ObjectRef` for properties with `object` type to lazy reference objects on the map (#39)
-- `MapObject#tile` for objects with `tile` type
-- Added properties section to README.md
+- `ObjectRef` for properties with `object` type to lazy reference objects on the map (#38)
+- Added properties section to README.md (#38)
+- `MapObject#tile` for objects with `tile` type (#39)
+- Add `ObjectLayer#find_by_name` to find objects by `name` attributes (#40)
 
 ### Changed
 
