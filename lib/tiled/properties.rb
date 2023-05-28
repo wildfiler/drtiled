@@ -72,6 +72,8 @@ module Tiled
             break object if object
           end
         end
+      when 'file'
+        convert_relative_path(@map.path, raw_value)
       when 'string'
         if raw_value
           raw_value
