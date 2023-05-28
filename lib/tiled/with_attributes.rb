@@ -38,7 +38,7 @@ module Tiled
       end
     end
 
-    def respond_to_missing?(name, *)
+    def respond_to_missing?(name, include_private = false)
       attributes.respond_to?(name) || super
     end
 
