@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Errors handling on wrong path to files, or incorrect tmx/tsx files (#37)
+- File properties support (#38)
+- `ObjectRef` for properties with `object` type to lazy reference objects on the map (#39)
+- `MapObject#tile` for objects with `tile` type
+- Added properties section to README.md
+
+### Changed
+
+- `TiledObject` renamed to `MapObject` (#34)
+
+### Fixed
+
+- Typos in README.md (#36)
+
 ## [0.2.0] - 2023-05-07
 
 ### Added
@@ -32,4 +48,4 @@ A lot of changes in README.md.
 
 [Unreleased]: https://github.com/wildfiler/drtiled/compare/v0.2.0...master
 [0.2.0]: https://github.com/wildfiler/drtiled/compare/v0.1.0...v0.2.0
-[0.0.1]: https://github.com/wildfiler/drtiled/releases/tag/v0.1.0
+[0.1.0]: https://github.com/wildfiler/drtiled/releases/tag/v0.1.0
