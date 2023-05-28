@@ -66,12 +66,7 @@ module Tiled
       when 'color'
         Color.from_tiled_rgba(raw_value)
       when 'object'
-        @map.layers.find do |layer|
-          if layer.is_a?(ObjectLayer)
-            object = layer[raw_value.to_i]
-            break object if object
-          end
-        end
+        ObjectRef.new(raw_value.to_i, @map)
       when 'file'
         convert_relative_path(@map.path, raw_value)
       when 'string'

@@ -51,6 +51,7 @@ module Tiled
   end
   class Tileset; end
   class ObjectLayer; end
+  class ObjectRef; end
 
   class UnknownAttribute < NoMethodError; end
   class Error < StandardError; end
