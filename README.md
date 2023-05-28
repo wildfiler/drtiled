@@ -135,7 +135,8 @@ object_layer.render(args, args.render_target(:foo).primitives) # You may also pa
  * `:polygon`: Has `x`, `y`, and a `points` attribute containing an array of
                points relative to the [x, y] point
  * `:point`: Has `x` and `y` attributes
- * `:tile`: Has `gid`, `x`, `y`, `width`, and `height` attributes
+ * `:tile`: Has `gid`, `x`, `y`, `width`, and `height` attributes, `tile` method will return
+`Tiled::Tile` that this object references by `gid`
 
 ### Using tile collision
 
