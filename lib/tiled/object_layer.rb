@@ -41,6 +41,10 @@ module Tiled
       objects.find { |o| o.id == id }
     end
 
+    def find_by_name(name)
+      objects.find { |object| object.name == name }
+    end
+
     def properties
       @properties ||= Properties.new(self)
     end
