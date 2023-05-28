@@ -13,6 +13,10 @@ module Tiled
       File.join(*absolute_path)
     end
 
+    module_function def convert_relative_path(path, relative_file)
+      Utils.relative_to_absolute(File.join(File.dirname(path), relative_file))
+    end
+
     module_function def gcd(a, b)
       if a % b == 0
         b
