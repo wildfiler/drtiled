@@ -68,7 +68,7 @@ module Tiled
       when 'object'
         ObjectRef.new(raw_value.to_i, @map)
       when 'file'
-        convert_relative_path(@map.path, raw_value)
+        Utils.convert_relative_path(@map.path, raw_value)
       when 'string'
         if raw_value
           raw_value
