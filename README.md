@@ -19,6 +19,9 @@ It supports TMX format directly allowing skip exporting to json or csv files ste
     * [Working with tiles](#working-with-tiles)
     * [Loading tilesets from files](#loading-tilesets-from-files)
     * [Rendering sprite from tileset](#rendering-sprite-from-tileset)
+    * [Using objects](#using-objects)
+    * [Using tile collision](#using-tile-collision)
+    * [Using properties](#using-properties)
 - [Running samples](#running-samples)
 - [Contributing](#contributing)
 - [Credits](#credits)
@@ -155,6 +158,17 @@ Or access individual tile related objects:
 layer.tile_at(new_x, new_y).object_layer.objects
 ```
 In this case all coordinates of object will be relative to tile. 
+
+### Using properties
+
+Next properties types supported:
+1. `int`, `float`, `bool` - converts to `Integer`, `Float`, `true`/`false` respectively.
+2. `string` - supports multiline string.
+3. `color` - will converts to `Tiled::Color` supports `#AARRGGBB` and `#RRGGBB` Tiled formats.
+4. `file` - relative file path will be converted to absolute path relative to game dir.
+5. `object` - will return `Tiled::ObjectRef`, which has `object` attribute that will be resolved to
+referenced object when called. 
+
 
 ## Running samples
 
