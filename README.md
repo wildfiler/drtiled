@@ -6,6 +6,7 @@ This is a library for loading Tiled map files in [DragonRuby Game Toolkit](https
 
 It supports TMX format directly allowing skip exporting to json or csv files step.
 
+Check out [tiledriver](https://github.com/vinnydiehl/tiledriver) for a lightweight lib with a camera and rendering functions.
 
 ## Demo
 
@@ -177,10 +178,6 @@ referenced object when called.
 # clone drtiled somewhere
 ./dragonruby /path/to/drtiled
 ```
-
-## Rendering
-
-Check out [DRTiled Renderer](https://github.com/vinnydiehl/drtiled-renderer) for a lightweight plugin with a camera and rendering functions.
 
 ## Contributing
 
