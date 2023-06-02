@@ -54,6 +54,8 @@ module Tiled
         end
       end
 
+      attributes.add(offset: [0.0, 0.0]) unless attributes.offset
+
       tilecount.times do |id|
         tiles[id] ||= begin
           Tile.new(self).tap do |tile|
