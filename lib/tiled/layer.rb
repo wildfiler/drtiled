@@ -78,19 +78,12 @@ module Tiled
     end
 
     def collision_objects
-      @collision_objects ||= begin
-        width = map.attributes.tilewidth
-        height = map.attributes.tileheight
+      @collision_objects ||= tiles.map_2d do |y, x, tile|
+        next unless tile
 
-        tiles.flat_map.with_index do |row, y|
-          row.flat_map.with_index do |tile, x|
-            next unless tile
-
-            ordered_x, ordered_y = xy_by_render_order(x, y)
-            tile.collision_objects(ordered_x * width, ordered_y * height)
-          end.compact
-        end
-      end
+        point = tile_to_screen(tile, x, y)
+        tile.collision_objects(point.x, point.y)
+      end.compact
     end
 
     def properties
@@ -139,22 +132,26 @@ module Tiled
                     raise_unsupported_render_order!
                   end
 
-      [x, ordered_y]
+      { x: x, y: ordered_y }
     end
 
     def prepare_sprites(sprite_class:, animated:)
-      width = map.attributes.tilewidth
-      height = map.attributes.tileheight
+      tiles.map_2d do |y, x, tile|
+        next unless tile
+        next if tile.animated? != animated
 
-      tiles.flat_map.with_index do |row, y|
-        row.map.with_index do |tile, x|
-          next unless tile
-          next if tile.animated? != animated
+        point = tile_to_screen(tile, x, y)
+        sprite_class.from_tiled(tile, x: point.x, y: point.y)
+      end.compact
+    end
 
-          ordered_x, ordered_y = xy_by_render_order(x, y)
-          sprite_class.from_tiled(tile, x: ordered_x * width, y: ordered_y * height)
-        end.compact
-      end
+    def tile_to_screen(tile, x, y)
+      tile_offset = tile.tileset.attributes.offset
+      ordered_point = xy_by_render_order(x, y)
+      {
+        x: ordered_point.x * map.tilewidth + tile_offset.x + offset.x,
+        y: ordered_point.y * map.tileheight + tile_offset.y + offset.y
+      }
     end
   end
 end
