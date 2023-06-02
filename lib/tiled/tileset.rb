@@ -5,7 +5,7 @@ module Tiled
 
     attr_reader :map, :path, :image, :tiles_cache
     attributes :firstgid, :source, :name, :tilewidth, :tileheight, :spacing, :margin, :tilecount,
-      :columns, :objectalignment
+      :columns, :objectalignment, :offset
 
     def initialize(map, path = nil, sprite_class = nil)
       @map = map
@@ -49,6 +49,8 @@ module Tiled
           tile = Tile.new(self)
           tile.from_xml_hash(child)
           tiles[tile.id] = tile
+        when 'tileoffset'
+          attributes.add(offset: [child[:attributes]['x'].to_f, -child[:attributes]['y'].to_f])
         end
       end
 
