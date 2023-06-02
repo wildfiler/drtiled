@@ -5,7 +5,7 @@ module Tiled
 
     attr_reader :map
 
-    attributes :id, :gid, :x, :y, :width, :height, :name, :type, :object_type, :points
+    attributes :id, :gid, :x, :y, :width, :height, :name, :type, :object_type, :points, :visible
 
     def initialize(map, attrs, children)
       @map = map
@@ -60,6 +60,11 @@ module Tiled
 
     def properties
       @properties ||= Properties.new(map)
+    end
+
+    # @return [Boolean] whether or not the object is visible
+    def visible?
+      visible
     end
 
     def tile
