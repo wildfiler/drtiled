@@ -16,6 +16,7 @@ def tick(args)
   args.state.loaded_maps ||= {}
   args.state.show_objects ||= false
   args.state.map_rendered ||= false
+  args.state.offset.y ||= 0
 
   if args.state.loaded_maps.empty?
     args.outputs.primitives << {
@@ -63,15 +64,16 @@ def tick(args)
 
     args.outputs.sprites << map.layers.map do |layer|
       next if layer.is_a?(Tiled::ObjectLayer) && !args.state.show_objects
-
-      render_targets = [{
-                          x: (1280 - map_width) / 2, y: 0,
-                          w: map_width, h: map_height,
-                          path: :"map_layer_#{layer.id}",
-                        }]
+      render_targets = [
+        {
+          x: (1280 - map_width) / 2 + layer.offset.x, y: layer.offset.y * ratio - args.state.offset.y,
+          w: map_width, h: map_height,
+          path: :"map_layer_#{layer.id}",
+        }
+      ]
       unless layer.animated_sprites.empty?
         render_targets << {
-          x: (1280 - map_width) / 2, y: 0,
+          x: (1280 - map_width) / 2 + layer.offset.x, y: layer.offset.y * ratio - args.state.offset.y,
           w: map_width, h: map_height,
           path: :"map_layer_#{layer.id}_animated",
         }
@@ -80,18 +82,29 @@ def tick(args)
     end
 
     show_prompts(args, map)
+
+    vertical_offset_max = map.layers.map { |layer| layer.offset.y }.max
+    if args.inputs.keyboard.up
+      args.state.offset.y = (args.state.offset.y + 1).clamp(0, vertical_offset_max)
+    end
+
+    if args.inputs.keyboard.down
+      args.state.offset.y = (args.state.offset.y - 1).clamp(0, vertical_offset_max)
+    end
   end
 
   if args.inputs.keyboard.key_down.right
     args.state.current_map_index += 1
     args.state.current_map_index = 0 if args.state.current_map_index > MAPS.length - 1
     args.state.map_rendered = false
+    args.state.offset.y = 0
   end
 
   if args.inputs.keyboard.key_down.left
     args.state.current_map_index -= 1
     args.state.current_map_index = MAPS.length - 1 if args.state.current_map_index < 0
     args.state.map_rendered = false
+    args.state.offset.y = 0
   end
 
   if args.inputs.keyboard.key_down.o
@@ -132,8 +145,16 @@ def show_prompts(args, map)
   unless map.object_groups.empty?
     args.outputs.debug << {
       x: 25,
-      y: 720 - 75,
+      y: 75.from_top,
       text: "(press 'o' to show objects layer)"
+    }.label
+  end
+
+  unless map.layers.map { |layer| layer.offset.y }.all? { |offset_y| offset_y.zero? }
+    args.outputs.debug << {
+      x: 25,
+      y: 50.from_top,
+      text: "(press up/down arrow key to scroll)"
     }.label
   end
 end

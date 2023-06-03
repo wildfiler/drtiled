@@ -95,8 +95,8 @@ module Tiled
       half_width = width / 2
       half_height = height / 2
 
-      offset_x = map.width * half_width - half_width + offset.x
-      offset_y = map.height * height - height + offset.y
+      offset_x = map.width * half_width - half_width
+      offset_y = map.height * height - height
 
       tiles.map_2d do |x, y, tile|
         next unless tile
@@ -184,8 +184,8 @@ module Tiled
       tile_offset = tile.tileset.attributes.offset
       ordered_point = xy_by_render_order(x, y)
       {
-        x: ordered_point.x * map.tilewidth + tile_offset.x + offset.x,
-        y: ordered_point.y * map.tileheight + tile_offset.y + offset.y
+        x: ordered_point.x * map.tilewidth + tile_offset.x,
+        y: ordered_point.y * map.tileheight + tile_offset.y
       }
     end
   end
