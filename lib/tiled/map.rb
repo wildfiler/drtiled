@@ -86,11 +86,7 @@ module Tiled
     end
 
     def pixelheight
-      @pixelheight ||= if orientation == 'isometric'
-        height * tileheight + layers.map { |layer| layer.offset.y }.max
-      else
-        height * tileheight
-      end
+      return height * tileheight
     end
 
     private
