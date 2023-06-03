@@ -25,7 +25,7 @@ require 'lib/tiled/unknown_attribute.rb'
 require 'lib/tiled/utils.rb'
 
 module Tiled
-  VERSION = '0.2.0'
+  VERSION = '0.3.0'
 
   module AttributeAssignment; end
   module Serializable;end
