@@ -14,6 +14,7 @@ module Tiled
         gid: attrs['gid']&.to_i,
         name: attrs['name'],
         type: attrs['type'],
+        visible: (attrs['visible'] != '0')
       )
 
       if (props_index = children.find_index { |child| child[:name] == 'properties' })
