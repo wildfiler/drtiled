@@ -41,7 +41,7 @@ module Tiled
           height: y_values.max - y_values.min + 2
         })
       else
-        %w[width height].each { |attr| attributes.add(attr => attrs[attr]) }
+        %w[width height].each { |attr| attributes.add(attr => attrs[attr].to_f) }
       end
 
       # Flip Y-axis
