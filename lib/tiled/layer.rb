@@ -68,13 +68,48 @@ module Tiled
     def sprites
       return [] unless visible?
 
-      @sprites ||= prepare_sprites(sprite_class: map.sprite_class, animated: false)
+      @sprites ||= case map.orientation
+      when 'isometric'
+        []
+      else
+        prepare_sprites(sprite_class: map.sprite_class, animated: false)
+      end
     end
 
     def animated_sprites
       return [] unless visible?
 
-      @animated_sprites ||= prepare_sprites(sprite_class: map.animated_sprite_class, animated: true)
+      @animated_sprites ||= case map.orientation
+      when 'isometric'
+        isometric_sprites
+      else
+        prepare_sprites(sprite_class: map.animated_sprite_class, animated: true)
+      end
+    end
+
+    def isometric_sprites
+      return [] if map.orientation != 'isometric'
+
+      height = map.attributes.tileheight
+      width = map.attributes.tilewidth
+      half_width = width / 2
+      half_height = height / 2
+
+      offset_x = map.width * half_width - half_width + offset.x
+      offset_y = map.height * height - height + offset.y
+
+      tiles.map_2d do |x, y, tile|
+        next unless tile
+
+        corrected_x = offset_x - (x - y) * half_width + tile.tileset.offset.x
+        corrected_y = offset_y - (x + y) * half_height + tile.tileset.offset.y
+
+        if tile.animated?
+          map.animated_sprite_class.from_tiled(tile, x: corrected_x, y: corrected_y)
+        else
+          map.sprite_class.from_tiled(tile, x: corrected_x, y: corrected_y)
+        end
+      end.compact
     end
 
     def collision_objects
