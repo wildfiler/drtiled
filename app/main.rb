@@ -1,8 +1,8 @@
 require 'lib/tiled/tiled.rb'
 
 MAPS = [
-  "maps/isometric.tmx",
   "maps/pipo_map.tmx",
+  "maps/isometric.tmx",
   "maps/fishercat_map.tmx",
   "maps/forest_map.tmx",
   "maps/loose_tiles_map.tmx",
