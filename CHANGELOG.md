@@ -15,10 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added properties section to README.md (#38)
 - `MapObject#tile` for objects with `tile` type (#39)
 - Add `ObjectLayer#find_by_name` to find objects by `name` attributes (#40)
+- Add offset attribute to tileset (#42)
+- Add visible attribute to objects (#43)
+- Add offsets to layer sprites and collisions (#44)
+- Isometric map support (#45)
 
 ### Changed
 
 - `TiledObject` renamed to `MapObject` (#34)
+- Update link to tiledriver lib (#41)
 
 ### Fixed
 
