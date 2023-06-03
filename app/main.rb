@@ -1,6 +1,7 @@
 require 'lib/tiled/tiled.rb'
 
 MAPS = [
+  "maps/isometric.tmx",
   "maps/pipo_map.tmx",
   "maps/fishercat_map.tmx",
   "maps/forest_map.tmx",
@@ -55,11 +56,26 @@ def tick(args)
       target.sprites << layer.animated_sprites
     end
 
+    ratio = [1280 / map.pixelwidth, 720 / map.pixelheight].min
+
+    map_width = map.pixelwidth * ratio
+    map_height = map.pixelheight * ratio
+
     args.outputs.sprites << map.layers.map do |layer|
       next if layer.is_a?(Tiled::ObjectLayer) && !args.state.show_objects
 
-      render_targets = [{ x: 280, y: 0, w: 720, h: 720, path: :"map_layer_#{layer.id}"}]
-      render_targets << { x: 280, y: 0, w: 720, h: 720, path: :"map_layer_#{layer.id}_animated"} unless layer.animated_sprites.empty?
+      render_targets = [{
+                          x: (1280 - map_width) / 2, y: 0,
+                          w: map_width, h: map_height,
+                          path: :"map_layer_#{layer.id}",
+                        }]
+      unless layer.animated_sprites.empty?
+        render_targets << {
+          x: (1280 - map_width) / 2, y: 0,
+          w: map_width, h: map_height,
+          path: :"map_layer_#{layer.id}_animated",
+        }
+      end
       render_targets
     end
 
@@ -91,11 +107,10 @@ def tick(args)
 end
 
 def render_target_for(args, map, path)
-  attributes = map.attributes
   target = args.render_target(path)
   target.clear_before_render = true
-  target.width = attributes.width * attributes.tilewidth
-  target.height = attributes.height * attributes.tileheight
+  target.width = map.pixelwidth
+  target.height = map.pixelheight
 
   target
 end
