@@ -297,7 +297,7 @@ module Tiled
       rt.width = width
       rt.height = height
 
-      lines = diameter_y.times.map do |y|
+      lines = diameter_y.to_i.times.map do |y|
         length = Math.sqrt(radius2_ratio * (radius_y2 - (radius_y - y) * (radius_y - y)))
         p1 = iso_coords(-length, y)
         p2 = iso_coords(+length, y)
