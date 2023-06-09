@@ -14,7 +14,7 @@ module Tiled
     end
 
     def self.load(filename, sprite_class = Sprite)
-      raise TilesetNotFound, "Unable to locate tileset file: '#{filename}'." unless File.exists?(filename)
+      raise TilesetNotFound, "Unable to locate tileset file: '#{filename}'." unless $gtk.stat_file(filename)
 
       xml = $gtk.parse_xml_file(filename)
 
@@ -141,7 +141,7 @@ module Tiled
     def load_external_xml(relative_path)
       @path = Utils.relative_to_absolute(File.join(File.dirname(map.path), relative_path))
 
-      raise TilesetNotFound, "Unable to locate external tileset file: '#{relative_path}'" unless File.exists?(path)
+      raise TilesetNotFound, "Unable to locate external tileset file: '#{relative_path}'" unless $gtk.stat_file(path)
 
       xml = $gtk.parse_xml_file(path)
 

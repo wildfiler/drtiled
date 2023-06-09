@@ -118,7 +118,7 @@ module Tiled
 
         point = tile_to_screen(tile, x, y)
         tile.collision_objects(point.x, point.y)
-      end.compact
+      end.flatten.compact
     end
 
     def properties

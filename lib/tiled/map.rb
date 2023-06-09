@@ -15,7 +15,7 @@ module Tiled
     end
 
     def load
-      raise MapNotFound, "Unable to locate map file: '#{path}'" unless File.exists?(path)
+      raise MapNotFound, "Unable to locate map file: '#{path}'" unless $gtk.stat_file(path)
 
       xml = $gtk.parse_xml_file(path)
 
