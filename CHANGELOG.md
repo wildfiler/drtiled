@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add support of custom property types (#51)
+
 ## [0.3.0] - 2023-06-03
 
 ### Added
