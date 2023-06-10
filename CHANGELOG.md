@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add support of custom property types (#51)
 
+### Fixed
+
+- Fix error when loading map objects with height or width < 1.0 (#46)
+- Fix maps and tilesets file existing check (#47)
+- Fix `Layer#collision_objects` method (#49)
+
 ## [0.3.0] - 2023-06-03
 
 ### Added
