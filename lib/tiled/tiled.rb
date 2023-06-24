@@ -12,6 +12,10 @@ require 'lib/tiled/layers.rb'
 require 'lib/tiled/layer_data.rb'
 require 'lib/tiled/map.rb'
 require 'lib/tiled/map_object.rb'
+require 'lib/tiled/map_object/polygon.rb'
+require 'lib/tiled/map_object/polyline.rb'
+require 'lib/tiled/map_object/text.rb'
+require 'lib/tiled/map_object/tile.rb'
 require 'lib/tiled/object_layer.rb'
 require 'lib/tiled/object_ref.rb'
 require 'lib/tiled/properties.rb'
@@ -42,7 +46,12 @@ module Tiled
   class Layers; end
   class LayerData; end
   class Map; end
-  class MapObject; end
+  class MapObject
+    class Polygon < MapObject; end
+    class Polyline < Polygon; end
+    class Text < MapObject; end
+    class Tile < MapObject; end
+  end
   class Properties; end
   class Sprite; end
   class AnimatedSprite < Tiled::Sprite; end
