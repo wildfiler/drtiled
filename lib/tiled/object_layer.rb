@@ -33,7 +33,7 @@ module Tiled
         when 'properties'
           properties.from_xml_hash(child[:children])
         when 'object'
-          @objects << MapObject.new(map, child[:attributes], child[:children])
+          @objects << MapObject.from_hash(map, child[:attributes], child[:children])
         end
       end
 
@@ -91,6 +91,8 @@ module Tiled
         next unless object.visible?
 
         case object.object_type
+        when :text
+          outputs_layer << object.to_h
         when :tile
           outputs_layer << Sprite.from_tiled(
             map.find_tile(object.gid),
@@ -155,6 +157,12 @@ module Tiled
         object_x, object_y = iso_coords(object.x, object.y)
 
         case object.object_type
+        when :text
+          label = object.to_h
+          new_x, new_y = iso_coords(label.x, label.y)
+          label[:x] = new_x
+          label[:y] = new_y + map.pixelheight / 2
+          outputs_layer << label
         when :tile
           outputs_layer << map.sprite_class.from_tiled(
             map.find_tile(object.gid),
