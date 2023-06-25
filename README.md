@@ -129,13 +129,18 @@ collision_layer.render(args, :debug) # Renders to args.outputs.debug
 object_layer.render(args, args.render_target(:foo).primitives) # You may also pass in a GTK::OutputsArray
 ```
 
-`#type` will give you one of the following:
+`#object_type` will give you one of the following:
 
  * `:rectangle`: The object has `x`, `y`, `width`, and `height` attributes
  * `:ellipse`: Same attributes as rectangle
  * `:polygon`: Has `x`, `y`, and a `points` attribute containing an array of
                points relative to the [x, y] point
+ * `:polyline`: Has `x`, `y`, and a `points` attribute containing an array of
+points relative to the [x, y] point
  * `:point`: Has `x` and `y` attributes
+ * `:text`: Same attributes as rectangle and `text`, `fontfamily`, `pixelsize`, `bold`, `italic`, `underline`, 
+`strikeout`, `kerning`, `wrap`, `color`, `halign`, `valign` attributes. `to_h` method will return label primitive that 
+can be used to output labels in `args.output.*`.  
  * `:tile`: Has `gid`, `x`, `y`, `width`, and `height` attributes, `tile` method will return
 `Tiled::Tile` that this object references by `gid`
 
