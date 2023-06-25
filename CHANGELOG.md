@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add support of custom property types (#51)
+- Add support of text and polyline objects (#53)
 
 ### Fixed
 
