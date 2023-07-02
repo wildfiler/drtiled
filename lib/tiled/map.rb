@@ -28,6 +28,11 @@ module Tiled
 
       map[:children].each do |child|
         case child[:name]
+        when 'imagelayer'
+          layer = ImageLayer.new(self)
+          layer.from_xml_hash(child)
+          layers.add layer
+          image_layers.add layer
         when 'layer'
           layer = Layer.new(self)
           layer.from_xml_hash(child)
@@ -56,6 +61,10 @@ module Tiled
 
     def object_groups
       @object_groups ||= Layers.new
+    end
+
+    def image_layers
+      @image_layers ||= Layers.new
     end
 
     def collision_objects

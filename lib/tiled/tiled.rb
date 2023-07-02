@@ -7,6 +7,7 @@ require 'lib/tiled/color.rb'
 require 'lib/tiled/gid.rb'
 require 'lib/tiled/gid/flags.rb'
 require 'lib/tiled/image.rb'
+require 'lib/tiled/image_layer.rb'
 require 'lib/tiled/layer.rb'
 require 'lib/tiled/layers.rb'
 require 'lib/tiled/layer_data.rb'
@@ -42,6 +43,7 @@ module Tiled
   class Attributes; end
   class Color; end
   class Image; end
+  class ImageLayer; end
   class Layer; end
   class Layers; end
   class LayerData; end
