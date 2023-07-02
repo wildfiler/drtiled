@@ -7,10 +7,11 @@ module Tiled
     attributes :firstgid, :source, :name, :tilewidth, :tileheight, :spacing, :margin, :tilecount,
       :columns, :objectalignment, :offset
 
-    def initialize(map, path = nil, sprite_class = nil)
+    def initialize(map, path = nil, sprite_class = nil, animated_sprite_class = nil)
       @map = map
       @path = path
-      @sprite_class = sprite_class || map&.sprite_class
+      @sprite_class = sprite_class || map&.sprite_class || Tiled::Sprite
+      @animated_sprite_class = animated_sprite_class || map&.animated_sprite_class || Tiled::AnimatedSprite
     end
 
     def self.load(filename, sprite_class = Sprite)
@@ -112,6 +113,10 @@ module Tiled
     # @return <Tiled::Sprite> sprite object.
     def sprite_at(x, y, id)
       @sprite_class.from_tiled(tiles[id], x: x, y: y)
+    end
+
+    def animated_sprite_at(x, y, id)
+      @animated_sprite_class.from_tiled(tiles[id], x: x, y: y)
     end
 
     [:tilewidth, :tileheight, :columns, :spacing, :margin, :firstgid, :tilecount].each do |name|
