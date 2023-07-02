@@ -97,7 +97,7 @@ module Tiled
     end
 
     def pixelheight
-      return height * tileheight
+      height * tileheight
     end
 
     private
