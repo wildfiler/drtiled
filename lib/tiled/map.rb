@@ -22,7 +22,9 @@ module Tiled
       raise ParseError, "Unable to parse map file: #{path}." unless xml
 
       map_data = xml[:children].first
-      attributes.add(map_data[:attributes])
+      raw_attributes = map_data[:attributes]
+      raw_attributes['backgroundcolor'] = Color.from_tiled_rgba(raw_attributes['backgroundcolor'])
+      attributes.add(raw_attributes)
 
       custom_properties = nil
 
