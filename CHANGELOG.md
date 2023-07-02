@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add support of image layers (#54)
+- Add Tiled::Tileset#animated_sprite_at (#55)
 
 ## [0.4.0] - 2023-06-25
 
