@@ -3,7 +3,7 @@ module Tiled
     include Tiled::Serializable
     include Tiled::WithAttributes
 
-    attr_reader :map, :path, :sprite_class, :animated_sprite_class
+    attr_reader :path, :sprite_class, :animated_sprite_class
     attributes :id, :tiledversion, :orientation, :renderorder, :compressionlevel, :width, :height,
       :tilewidth, :tileheight, :hexsidelength, :staggeraxis, :staggerindex, :backgroundcolor, :nextlayerid,
       :nextobjectid, :infinite
@@ -21,12 +21,12 @@ module Tiled
 
       raise ParseError, "Unable to parse map file: #{path}." unless xml
 
-      @map = xml[:children].first
-      attributes.add(@map[:attributes])
+      map_data = xml[:children].first
+      attributes.add(map_data[:attributes])
 
       custom_properties = nil
 
-      map[:children].each do |child|
+      map_data[:children].each do |child|
         case child[:name]
         when 'imagelayer'
           layer = ImageLayer.new(self)
