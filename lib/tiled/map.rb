@@ -89,7 +89,7 @@ module Tiled
     end
 
     def exclude_from_serialize
-      super + %w[tiles_cache tilesets layers]
+      super + %w[tiles_cache tilesets layers object_groups image_layers collision_objects]
     end
 
     def pixelwidth
