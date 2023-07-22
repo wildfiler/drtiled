@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add support of image layers (#54)
 - Add Tiled::Tileset#animated_sprite_at (#55)
+- Add wangsets support (#60)
+
+### Changes
+
+- Support for transient RT's (DR 4.11+), minor label! updates (#56)
+- Convert backgroundcolor of map to Tiled::Color (#58)
+
+### Fixed
+
+- Remove caching of map data in `Tiled::Map` (#57)
+- In `lib/tiled.rb` change require order for sync require in new DR (#59)
 
 ## [0.4.0] - 2023-06-25
 
