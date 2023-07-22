@@ -14,7 +14,7 @@ module Tiled
       :tileset, :path, :tile_w, :tile_h, :tile_x, :tile_y, :animation,
       :flip_horizontally, :flip_vertically, :angle
     )
-    attributes :id, :type, :terrain, :probability
+    attributes :id, :type, :probability
 
     def initialize(tileset_or_tile, gid = nil)
       @flip_horizontally = false
@@ -59,6 +59,7 @@ module Tiled
     def init_empty(id)
       attributes.add({
         id: id,
+        probability: 1.0,
       })
       init_from_tileset
     end
@@ -112,7 +113,7 @@ module Tiled
 
     def copy_tile(tile)
       @tileset = tile.tileset
-      attributes.add(id: tile.id, type: tile.type, terrain: tile.terrain, probability: tile.probability)
+      attributes.add(id: tile.id, type: tile.type, probability: tile.probability)
       @path = tile.path
       @animation = tile.animation
       @tile_x, @tile_y, @tile_w, @tile_h = tileset.id_to_xywh(id.to_i)
