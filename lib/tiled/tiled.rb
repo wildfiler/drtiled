@@ -33,6 +33,9 @@ module Tiled
   class Tileset; end
   class ObjectLayer; end
   class ObjectRef; end
+  class WangColor; end
+  class WangSet; end
+  class WangTile; end
 
   class UnknownAttribute < NoMethodError; end
   class Error < StandardError; end
@@ -74,3 +77,6 @@ require 'lib/tiled/tile/frame.rb'
 require 'lib/tiled/tileset.rb'
 require 'lib/tiled/unknown_attribute.rb'
 require 'lib/tiled/utils.rb'
+require 'lib/tiled/wang_color.rb'
+require 'lib/tiled/wang_set.rb'
+require 'lib/tiled/wang_tile.rb'

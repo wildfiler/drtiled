@@ -3,7 +3,7 @@ module Tiled
     include Tiled::Serializable
     include Tiled::WithAttributes
 
-    attr_reader :map, :path, :image, :tiles_cache
+    attr_reader :map, :path, :image, :tiles_cache, :wangsets
     attributes :firstgid, :source, :name, :tilewidth, :tileheight, :spacing, :margin, :tilecount,
       :columns, :objectalignment, :offset
 
@@ -28,7 +28,7 @@ module Tiled
       end
     end
 
-    # TODO: Add terraintypes, grid, tileoffset, wangsets
+    # TODO: Add grid
     def from_xml_hash(hash)
       attributes.add(hash[:attributes])
 
@@ -38,6 +38,7 @@ module Tiled
       end
 
       @tiles = Array.new(tilecount)
+      wangsets_hash = []
 
       hash[:children].each do |child|
         case child[:name]
@@ -52,6 +53,8 @@ module Tiled
           tiles[tile.id] = tile
         when 'tileoffset'
           attributes.add(offset: [child[:attributes]['x'].to_f, -child[:attributes]['y'].to_f])
+        when 'wangsets'
+          wangsets_hash = child[:children]
         end
       end
 
@@ -62,6 +65,12 @@ module Tiled
           Tile.new(self).tap do |tile|
             tile.init_empty(id)
           end
+        end
+      end
+
+      @wangsets = wangsets_hash.map do |hash|
+        WangSet.new(self).tap do |wangset|
+          wangset.from_xml_hash(hash)
         end
       end
     end
@@ -85,6 +94,8 @@ module Tiled
     end
 
     def find(gid)
+      return unless gid
+
       tile = tiles[gid_to_id(gid)]
 
       if Tiled::Gid.flags?(gid) && tile
@@ -156,7 +167,7 @@ module Tiled
     end
 
     def exclude_from_serialize
-      super + %w[tiles_cache transformed_tiles tiles]
+      super + %w[tiles_cache transformed_tiles tiles wangsets]
     end
   end
 end
