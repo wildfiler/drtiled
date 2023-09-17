@@ -1,81 +1,84 @@
-class Tiled::ImageLayer
-  include Tiled::Serializable
-  include Tiled::WithAttributes
+module Tiled
+  class ImageLayer
 
-  attr_reader :map, :image
+    include Tiled::Serializable
+    include Tiled::WithAttributes
 
-  attributes :id, :name, :x, :y, :width, :height, :opacity, :visible, :tintcolor, :offset, :parallax, :repeatx, :repeaty
+    attr_reader :map, :image
 
-  def initialize(map)
-    @map = map
-  end
+    attributes :id, :name, :x, :y, :width, :height, :opacity, :visible, :tintcolor, :offset, :parallax, :repeatx, :repeaty
 
-  def from_xml_hash(hash)
-    raw_attributes = hash[:attributes]
-    raw_attributes['visible'] = raw_attributes['visible'] != '0'
-    raw_attributes['offset'] = [raw_attributes.delete('offsetx').to_f,
-                                -raw_attributes.delete('offsety').to_f]
-    raw_attributes['parallax'] = [raw_attributes.delete('parallaxx')&.to_f || 1.0,
-                                  raw_attributes.delete('parallaxy')&.to_f || 1.0]
+    def initialize(map)
+      @map = map
+    end
 
-    attributes.add(raw_attributes)
+    def from_xml_hash(hash)
+      raw_attributes = hash[:attributes]
+      raw_attributes['visible'] = raw_attributes['visible'] != '0'
+      raw_attributes['offset'] = [raw_attributes.delete('offsetx').to_f,
+                                  -raw_attributes.delete('offsety').to_f]
+      raw_attributes['parallax'] = [raw_attributes.delete('parallaxx')&.to_f || 1.0,
+                                    raw_attributes.delete('parallaxy')&.to_f || 1.0]
 
-    hash[:children].each do |child|
-      case child[:name]
-      when 'properties'
-        properties.from_xml_hash(child[:children])
-      when 'image'
-        @image = Tiled::Image.new(map)
-        image.from_xml_hash(child)
+      attributes.add(raw_attributes)
+
+      hash[:children].each do |child|
+        case child[:name]
+        when 'properties'
+          properties.from_xml_hash(child[:children])
+        when 'image'
+          @image = Tiled::Image.new(map)
+          image.from_xml_hash(child)
+        end
+      end
+
+      self
+    end
+
+    def visible?
+      visible
+    end
+
+    def animated_sprites
+      []
+    end
+
+    def sprites
+      return [sprite] unless repeatx || repeaty
+
+      y_times.times.flat_map do |y_index|
+        x_times.times.map do |x_index|
+          sprite(x_index, y_index)
+        end
       end
     end
 
-    self
-  end
-
-  def visible?
-    visible
-  end
-
-  def animated_sprites
-    []
-  end
-
-  def sprites
-    return [sprite] unless repeatx || repeaty
-
-    y_times.times.flat_map do |y_index|
-      x_times.times.map do |x_index|
-        sprite(x_index, y_index)
-      end
+    def collision_objects
+      []
     end
-  end
 
-  def collision_objects
-    []
-  end
+    private
 
-  private
+    def sprite(x_index = 0, y_index = 0)
+      {
+        x: x_index * image.w + offset.x,
+        y: map.pixelheight - (y_index + 1) * image.h + offset.y,
+        w: image.w,
+        h: image.h,
+        path: image.path
+      }
+    end
 
-  def sprite(x_index = 0, y_index = 0)
-    {
-      x: x_index * image.w + offset.x,
-      y: map.pixelheight - (y_index + 1) * image.h + offset.y,
-      w: image.w,
-      h: image.h,
-      path: image.path
-    }
-  end
+    def x_times
+      return 1 unless repeatx
 
-  def x_times
-    return 1 unless repeatx
+      (map.pixelwidth / image.w).ceil.to_i + 1
+    end
 
-    (map.pixelwidth / image.w).ceil.to_i + 1
-  end
+    def y_times
+      return 1 unless repeaty
 
-  def y_times
-    return 1 unless repeaty
-
-    (map.pixelheight / image.h).ceil.to_i
+      (map.pixelheight / image.h).ceil.to_i
+    end
   end
 end
