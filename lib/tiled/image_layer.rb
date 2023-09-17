@@ -57,6 +57,10 @@ module Tiled
       []
     end
 
+    def properties
+      @properties ||= Properties.new(self)
+    end
+
     private
 
     def sprite(x_index = 0, y_index = 0)
