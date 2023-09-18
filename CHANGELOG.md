@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2023-09-18
+
+### Fixed
+
+- Add properties to Tiled::ImageLayer (#61)
+
 ## [0.5.0] - 2023-07-22
 
 ### Added
@@ -86,7 +92,8 @@ A lot of changes in README.md.
 - Convert attributes to the correct types when initializing objects. (#22)
 - Fix TSX relative image paths & reorganize sample assets. (#9)
 
-[Unreleased]: https://github.com/wildfiler/drtiled/compare/v0.5.0...master
+[Unreleased]: https://github.com/wildfiler/drtiled/compare/v0.5.1...master
+[0.5.1]: https://github.com/wildfiler/drtiled/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/wildfiler/drtiled/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/wildfiler/drtiled/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/wildfiler/drtiled/compare/v0.2.0...v0.3.0
