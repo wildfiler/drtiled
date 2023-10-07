@@ -45,6 +45,10 @@ module Tiled
   class ParseError < Error; end
   class MapNotFound < Error; end
   class TilesetNotFound < Error; end
+  
+  #added the following exceptions, which are raised in the object_by_name of the Tiled::Map class
+  class ObjectLayerNotFound < Error; end
+  class ObjectNameNotFound < Error; end
 end
 
 require 'lib/tiled/with_attributes.rb'

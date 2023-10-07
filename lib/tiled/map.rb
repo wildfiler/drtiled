@@ -100,6 +100,28 @@ module Tiled
       height * tileheight
     end
 
+    #gets the first object layer with the passed name of `layer_name`
+    #then looks in that layer for the first object that has the name `object_name`
+    #then returns that object
+    def object_by_name(layer_name, object_name)
+      
+      named_layer = @object_groups.reject do | layer |
+        layer.name != layer_name
+      end.first
+
+      raise ObjectLayerNotFound, "The object layer \"#{layer_name}\" was not found in map \"#{@path}\"" if named_layer.nil?
+      
+      the_object = named_layer.objects.reject do | object |
+        object.name != object_name
+      end
+
+      raise ObjectNameNotFound, "The object named \"#{object_name}\" was not found in object layer \"#{layer_name}\"" if the_object.empty?
+
+      #if we get multiple objects with the name passed, only return the first item.
+      the_object.first
+    end
+
+    
     private
 
     def cache_tile(gid)
