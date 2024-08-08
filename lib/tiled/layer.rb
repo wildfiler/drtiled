@@ -42,7 +42,7 @@ module Tiled
     # Get tiles of layer
     # @return [Array<Array<Tiled::Tile, nil>>] 2d array of layer tiles, `nil` for empty places.
     def tiles
-      @tiles ||= data.tiles.map do |row|
+      @tiles ||= tile_rows_from_data.map do |row|
         row.map do |gid|
           map.find_tile(gid)
         end
@@ -142,12 +142,12 @@ module Tiled
       map.renderorder || RIGHT_DOWN
     end
 
-    def tile_rows
+    def tile_rows_from_data
       case render_order
       when RIGHT_DOWN
-        tiles
+        data.tiles
       when RIGHT_UP
-        tiles.reverse
+        data.tiles.reverse
       else
         raise_unsupported_render_order!
       end
