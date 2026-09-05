@@ -101,8 +101,8 @@ module Tiled
       tiles.map_2d do |x, y, tile|
         next unless tile
 
-        corrected_x = offset_x - (x - y) * half_width + tile.tileset.offset.x
-        corrected_y = offset_y - (x + y) * half_height + tile.tileset.offset.y
+        corrected_x = offset_x - (x - y) * half_width + tile.tileset.offset[0]
+        corrected_y = offset_y - (x + y) * half_height + tile.tileset.offset[1]
 
         if tile.animated?
           map.animated_sprite_class.from_tiled(tile, x: corrected_x, y: corrected_y)
@@ -184,8 +184,8 @@ module Tiled
       tile_offset = tile.tileset.attributes.offset
       ordered_point = xy_by_render_order(x, y)
       {
-        x: ordered_point.x * map.tilewidth + tile_offset.x,
-        y: ordered_point.y * map.tileheight + tile_offset.y
+        x: ordered_point.x * map.tilewidth + tile_offset[0],
+        y: ordered_point.y * map.tileheight + tile_offset[1]
       }
     end
   end

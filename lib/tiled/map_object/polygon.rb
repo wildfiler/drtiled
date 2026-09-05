@@ -7,8 +7,8 @@ module Tiled
         super(map, attrs, children)
 
         points = parse_points(children)
-        x_min, x_max = points.map(&:x).minmax
-        y_min, y_max = points.map(&:y).minmax
+        x_min, x_max = points.map { |point| point[0] }.minmax
+        y_min, y_max = points.map { |point| point[1] }.minmax
         height = y_max - y_min + 2
 
         attributes.add(
@@ -29,7 +29,7 @@ module Tiled
       # The Y-axis is flipped for consistency with DragonRuby's rendering.
 
       children.first[:attributes]['points'].split(' ').map do |point|
-        point.split(',').map(&:to_f).tap { |coords| coords.y *= -1 }
+        point.split(',').map(&:to_f).tap { |coords| coords[1] *= -1 }
       end
     end
   end

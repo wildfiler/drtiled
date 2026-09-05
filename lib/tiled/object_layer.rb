@@ -77,6 +77,9 @@ module Tiled
       return unless visible?
 
       cache_ellipse(args)
+
+      # DR no longer supports solids
+      target = :sprites if target == :solids
       outputs_layer = target.is_a?(Symbol) ? args.outputs.send(target) : target
 
       if map.orientation == 'isometric'
@@ -106,9 +109,9 @@ module Tiled
             w: object.width, h: object.height,
             **color.to_h
           }
-          solid = border.merge(primitive_marker: :solid, a: color.a * 0.7)
+          solid = border.merge(path: :solid, a: color.a * 0.7)
 
-          outputs_layer << [border, solid]
+          outputs_layer << [border]
         when :ellipse
           outputs_layer << {
             x: object.x, y: object.y,
@@ -122,14 +125,14 @@ module Tiled
           target = :"drtiled_polygon#{object.id}"
 
           points = object.points
-          min_x = points.map(&:x).min
-          min_y = points.map(&:y).min
+          min_x = points.map { |point| point[0] }.min
+          min_y = points.map { |point| point[1] }.min
 
           cache_polygon(args, points, target)
 
           outputs_layer << {
-            x: object.x - (points[0].x - min_x) - 1,
-            y: object.y - (points[0].y - min_y) + object.height - 1,
+            x: object.x - (points[0][0] - min_x) - 1,
+            y: object.y - (points[0][1] - min_y) + object.height - 1,
             w: object.width, h: object.height,
             path: target,
             source_x: 0, source_y: 0,
@@ -180,8 +183,8 @@ module Tiled
           render_target = :"rectangle#{object.id}"
           cache_polygon(args, points, render_target)
 
-          min_x, max_x = points.map(&:x).minmax
-          min_y, max_y = points.map(&:y).minmax
+          min_x, max_x = points.map { |point| point[0] }.minmax
+          min_y, max_y = points.map { |point| point[1] }.minmax
           width = max_x - min_x
           height = max_y - min_y
 
@@ -207,8 +210,8 @@ module Tiled
             iso_coords(object.height, 0),
           ]
 
-          min_x, max_x = points.map(&:x).minmax
-          min_y, max_y = points.map(&:y).minmax
+          min_x, max_x = points.map { |point| point[0] }.minmax
+          min_y, max_y = points.map { |point| point[1] }.minmax
           width = max_x - min_x
           height = max_y - min_y
 
@@ -226,13 +229,13 @@ module Tiled
             **color.to_h, a: color.a * 0.7,
           }
         when :polygon
-          points = object.points.map { |point| iso_coords(point.x, point.y) }
+          points = object.points.map { |point| iso_coords(point[0], point[1]) }
 
           target = :"drtiled_polygon#{object.id}"
           cache_polygon(args, points, target)
 
-          min_x, max_x = points.map(&:x).minmax
-          min_y, max_y = points.map(&:y).minmax
+          min_x, max_x = points.map { |point| point[0] }.minmax
+          min_y, max_y = points.map { |point| point[1] }.minmax
           width = max_x - min_x
           height = max_y - min_y
 
@@ -286,8 +289,8 @@ module Tiled
     end
 
     def cache_isoellipse(args, target, object, points)
-      min_x, max_x = points.map(&:x).minmax
-      min_y, max_y = points.map(&:y).minmax
+      min_x, max_x = points.map { |point| point[0] }.minmax
+      min_y, max_y = points.map { |point| point[1] }.minmax
       width = max_x - min_x
       height = max_y - min_y
 
@@ -311,8 +314,8 @@ module Tiled
         p2 = iso_coords(+length, y)
 
         {
-          x: p1.x + radius_x, y: p1.y + radius_y / 2 - diff / 4,
-          x2: p2.x + radius_x, y2: p2.y + radius_y / 2 - diff / 4,
+          x: p1[0] + radius_x, y: p1[1] + radius_y / 2 - diff / 4,
+          x2: p2[0] + radius_x, y2: p2[1] + radius_y / 2 - diff / 4,
           r: 255, g: 255, b: 255
         }
       end
@@ -325,13 +328,13 @@ module Tiled
       args.state.polygon_cached ||= {}
       return if args.state.polygon_cached[target]
 
-      min_x = points.map(&:x).min
-      min_y, max_y = points.map(&:y).minmax
+      min_x =        points.map { |point| point[0] }.min
+      min_y, max_y = points.map { |point| point[1] }.minmax
 
       height = max_y - min_y + 2
 
       # Calculate the starting point of the polygon
-      offset = [points[0].x * 2 - min_x + 1, points[0].y * 2 - min_y + 1]
+      offset = [points[0][0] * 2 - min_x + 1, points[0][1] * 2 - min_y + 1]
 
       # Similar to the circle, this is drawn as a bunch of horizontal lines
       height.to_i.times do |y|
@@ -346,23 +349,23 @@ module Tiled
 
           # We're iterating over each line of the polygon. This if statement
           # will hit on each line that intersects the line that we're drawing
-          if (point.y <= y && next_point.y > y) || (next_point.y <= y && point.y > y)
-            if point.y == next_point.y
+          if (point[1] <= y && next_point[1] > y) || (next_point[1] <= y && point[1] > y)
+            if point[1] == next_point[1]
               # The edge is horizontal, so the intersection is just the
               # X-coordinate of the point
-              intersections << offset.x + point.x
+              intersections << offset[0] + point[0]
             else
               # Find the X-coordinate where the edge intersects the
               # row using the equation of the line
-              intersections << offset.x +
-                ((y - point.y) * (next_point.x - point.x) /
-                  (next_point.y - point.y)) + point.x
+              intersections << offset[0] +
+                ((y - point[1]) * (next_point[0] - point[0]) /
+                  (next_point[1] - point[1])) + point[0]
             end
           end
         end
 
         # Y-coordinate on the sprite that this line is being drawn
-        sprite_y = offset.y + y
+        sprite_y = offset[1] + y
 
         # `intersections` contains every X coordinate where the line that we're drawing
         # crosses the border of the shape we need to draw. In cases like a triangle, there
@@ -389,8 +392,8 @@ module Tiled
         next_point = points[(index + 1) % points.length]
 
         args.render_target(target).lines << {
-          x: offset.x + point.x, y: offset.y + point.y,
-          x2: offset.x + next_point.x, y2: offset.y + next_point.y,
+          x: offset[0] + point[0], y: offset[1] + point[1],
+          x2: offset[0] + next_point[0], y2: offset[1] + next_point[1],
           **color.to_h
         }
       end

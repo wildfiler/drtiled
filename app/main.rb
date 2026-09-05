@@ -13,11 +13,18 @@ MAPS = [
 
 DR_TRANSIENT_API_VERSION = 4.11
 
+def boot(args)
+  # disable nil punning like DR 7.x when wrapped in `module Main`
+  args.state = {}
+end
+
 def tick(args)
   args.state.current_map_index ||= 0
   args.state.loaded_maps ||= {}
   args.state.show_objects ||= false
   args.state.map_rendered ||= false
+
+  args.state.offset ||= {}
   args.state.offset.y ||= 0
 
   if args.state.loaded_maps.empty?
@@ -70,14 +77,14 @@ def tick(args)
       next if layer.is_a?(Tiled::ObjectLayer) && !args.state.show_objects
       render_targets = [
         {
-          x: (1280 - map_width) / 2 + layer.offset.x, y: layer.offset.y * ratio - args.state.offset.y,
+          x: (1280 - map_width) / 2 + layer.offset[0], y: layer.offset[1] * ratio - args.state.offset.y,
           w: map_width, h: map_height,
           path: :"map_layer_#{layer.id}",
         }
       ]
       unless layer.animated_sprites.empty?
         render_targets << {
-          x: (1280 - map_width) / 2 + layer.offset.x, y: layer.offset.y * ratio - args.state.offset.y,
+          x: (1280 - map_width) / 2 + layer.offset[0], y: layer.offset[1] * ratio - args.state.offset.y,
           w: map_width, h: map_height,
           path: :"map_layer_#{layer.id}_animated",
         }
@@ -87,7 +94,7 @@ def tick(args)
 
     show_prompts(args, map)
 
-    vertical_offset_max = map.layers.map { |layer| layer.offset.y }.max
+    vertical_offset_max = map.layers.map { |layer| layer.offset.yu }.max
     if args.inputs.keyboard.up
       args.state.offset.y = (args.state.offset.y + 1).clamp(0, vertical_offset_max)
     end
@@ -155,7 +162,7 @@ def show_prompts(args, map)
     }.label!
   end
 
-  unless map.layers.map { |layer| layer.offset.y }.all? { |offset_y| offset_y.zero? }
+  unless map.layers.map { |layer| layer.offset[1] }.all? { |offset_y| offset_y.zero? }
     args.outputs.debug << {
       x: 25,
       y: 50.from_top,
